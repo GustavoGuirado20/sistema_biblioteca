@@ -116,25 +116,42 @@ begin
   end;
 end;
 
+//Gera números aleatórios para preencher Telefone e CPF de usuários
 function NumeroAleatorio: Integer;
 begin
   Randomize;
   Result := Random(90000000000) + 10000000000;
 end;
 
-procedure PreencherUsuariosCadastradosIniciais(aUsuario: TUsuario);
+procedure PreencherUsuariosCadastradosIniciais(aUsuarios: TUsuariosCadastrados);
 const
   NOME_EMAIL: array[0..14,0..1] of String =
   (
     ('Emilia Azevedo Silva', 'emiliasilva72@hmail.com'),
     ('Kauê Goncalves Pinto', 'kaue.pinto20@gotmail.com'),
     ('Samuel Cavalcanti Barbosa', 'samuelzim99@gotmail.com'),
-
-   )
+    ('Isabela Dias Carvalho', 'isah_gatinha2002@hmail.com'),
+    ('Brenda Castro Ribeiro', 'brendacribeiro32@hmail.com'),
+    ('Vinícius Ferreira Costa', 'macinhademodela@gotmail.com'),
+    ('Elizeu Drummond', 'drummondaum@ig.com.br'),
+    ('Carolina Cardoso', 'carol_4356@yahoo.com.br'),
+    ('Laura Martins Araujo', 'lmaraujo@hmail.com'),
+    ('Leticia Correa', 'correaleticia23@jmail.com'),
+    ('João Carlos de Souza', 'joaum_do_feijaum@ig.com.br'),
+    ('Lucas Azevedo', 'seu_luquinhas@hmail.com'),
+    ('Estevan Castro', 'estevan_castro9543@gotmail.com'),
+    ('Vitória Pinto Dias', 'vividias@gotmail.com'),
+    ('Julio Fernandes', 'juju_fefe@ig.com.br')
+   );
 var
   I: Integer;
 begin
-
+  SetLength(aUsuarios, 15);
+  for I := 0 to 15 do
+  begin
+    PreencherUsuario(NOME_EMAIL[I][0], NOME_EMAIL[I][1], (I + 1),
+                      NumeroAleatorio, NumeroAleatorio);
+  end;
 end;
 
 {Função para retornar uma String dependendo do campo boolean Disponível}
@@ -144,6 +161,25 @@ begin
     Result := 'Disponível'
   else
     Result := 'Emprestado';
+end;
+
+procedure MostrarUsuario(aUsuario: TUsuario);
+begin
+  writeln('Código  : ' + aUsuario.Cod.ToString);
+  writeln('Nome    : ' + aUsuario.Nome);
+  writeln('Telefone: ' + aUsuario.Telefone.ToString);
+  writeln('CPF     : ' + aUsuario.CPF.ToString);
+  writeln('Email   : ' + aUsuario.Email);
+end;
+
+procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aUsuarios)) do
+  begin
+    MostrarUsuario(aUsuarios[I]);
+  end;
 end;
 
 function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca; aDisponivel: Boolean): Integer;
@@ -242,9 +278,9 @@ var
   xBiblioteca: TBiblioteca;
 begin
   preencheBibliotecaInicial(xBiblioteca);
-  MostrarCatalogo(xBiblioteca);
-  writeln(Length(xBiblioteca));
-  EscreverPorcentagemLivros(xBiblioteca, false);
+  //MostrarCatalogo(xBiblioteca);
+  //writeln(Length(xBiblioteca));
+  //EscreverPorcentagemLivros(xBiblioteca, false);
 end;
 
 Function Menu: byte;
