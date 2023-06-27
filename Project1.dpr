@@ -30,9 +30,9 @@ type
   TUsuario = Record
     Cod: Integer;
     Nome: String;
-    Telefone: Integer;
+    Telefone: String;
     Email: String;
-    CPF: Integer;
+    CPF: String;
     LivroEmprestado: TLivroEmprestado;
     Historico: THistorico;
   End;
@@ -65,8 +65,8 @@ begin
   Result := xLivroEmprestado;
 end;
 
-function PreencherUsuario(const aNome, aEmail: String;
-  const aCod, aTelefone, aCPF: Integer): TUsuario;
+function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
+  const aCod: Integer): TUsuario;
 var
   xUsuario: TUsuario;
 begin
@@ -117,13 +117,24 @@ begin
 end;
 
 //Gera números aleatórios para preencher Telefone e CPF de usuários
-function NumeroAleatorio: Integer;
+function NumeroAleatorio: String;
+var
+  xNumeroString: String;
+  I, xDigito: Integer;
 begin
   Randomize;
-  Result := Random(90000000000) + 10000000000;
+  xNumeroString := '';
+  for I := 1 to 11 do
+  begin
+    xDigito := Random(9);
+    if xDigito < 0 then
+      xDigito := xDigito * -1;
+    xNumeroString := xNumeroString + xDigito.ToString;
+  end;
+  Result := xNumeroString;
 end;
 
-procedure PreencherUsuariosCadastradosIniciais(aUsuarios: TUsuariosCadastrados);
+procedure PreencherUsuariosCadastradosIniciais(var aUsuarios: TUsuariosCadastrados);
 const
   NOME_EMAIL: array[0..14,0..1] of String =
   (
@@ -147,11 +158,28 @@ var
   I: Integer;
 begin
   SetLength(aUsuarios, 15);
-  for I := 0 to 15 do
+  for I := 0 to 14 do
   begin
-    PreencherUsuario(NOME_EMAIL[I][0], NOME_EMAIL[I][1], (I + 1),
-                      NumeroAleatorio, NumeroAleatorio);
+    aUsuarios[I] := PreencherUsuario(NOME_EMAIL[I][0], NOME_EMAIL[I][1], NumeroAleatorio, NumeroAleatorio, (I + 1));
   end;
+end;
+
+function FormatarTelefone(aTel: String): String;
+begin
+  if aTel.Length = 11 then
+    Result := Format('(%2.2s) %5.5s-%4.4s',
+    [Copy(aTel, 1, 2), Copy(aTel, 3, 5), Copy(aTel, 8, 4)])
+  else
+    Result := aTel;
+end;
+
+function FormatarCPF(aCPF: String): String;
+begin
+  if aCPF.Length = 11 then
+    Result := Format('%3.3s.%3.3s.%3.3s-%2.2s',
+    [Copy(aCPF, 1, 3), Copy(aCPF, 4, 3), Copy(aCPF, 7, 3), Copy(aCPF, 10, 2)])
+  else
+    Result := aCPF;
 end;
 
 {Função para retornar uma String dependendo do campo boolean Disponível}
@@ -167,15 +195,17 @@ procedure MostrarUsuario(aUsuario: TUsuario);
 begin
   writeln('Código  : ' + aUsuario.Cod.ToString);
   writeln('Nome    : ' + aUsuario.Nome);
-  writeln('Telefone: ' + aUsuario.Telefone.ToString);
-  writeln('CPF     : ' + aUsuario.CPF.ToString);
+  writeln('Telefone: ' + FormatarTelefone(aUsuario.Telefone));
+  writeln('CPF     : ' + FormatarCPF(aUsuario.CPF));
   writeln('Email   : ' + aUsuario.Email);
+  writeln;
 end;
 
 procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
 var
   I: Integer;
 begin
+  writeln('Total de usuários: ' + Length(aUsuarios).ToString);
   for I := 0 to pred(Length(aUsuarios)) do
   begin
     MostrarUsuario(aUsuarios[I]);
@@ -276,8 +306,11 @@ end;
 procedure ControladorTeste;
 var
   xBiblioteca: TBiblioteca;
+  xUsuariosCadastraddos: TUsuariosCadastrados;
 begin
   preencheBibliotecaInicial(xBiblioteca);
+  PreencherUsuariosCadastradosIniciais(xUsuariosCadastraddos);
+  MostrarUsuariosCastrados(xUsuariosCadastraddos);
   //MostrarCatalogo(xBiblioteca);
   //writeln(Length(xBiblioteca));
   //EscreverPorcentagemLivros(xBiblioteca, false);
@@ -303,6 +336,7 @@ end;
 procedure Controller;
 var
   xBiblioteca: TBiblioteca;
+  xUsuariosCadastraddos: TUsuariosCadastrados;
 begin
 
 end;
