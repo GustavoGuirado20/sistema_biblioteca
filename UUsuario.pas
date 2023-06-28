@@ -2,10 +2,9 @@ unit UUsuario;
 
 interface
 
-uses ULivro;
+uses ULivro, ULivroEmprestado;
 
 type
-  THistorico = Array of TLivroEmprestado;
 
   TUsuario = Record
     Cod: Integer;
@@ -19,6 +18,7 @@ type
 
   TUsuariosCadastrados = Array of TUsuario;
 
+  procedure AumentarUsuariosCadastrados(aUsuariosCadastrados: TUsuariosCadastrados);
   procedure MostrarUsuario(aUsuario: TUsuario);
   function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
     const aCod: Integer): TUsuario;
@@ -26,33 +26,17 @@ type
   procedure PreencherUsuariosCadastradosIniciais(var aUsuarios: TUsuariosCadastrados);
   procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
 
-
 implementation
 
 uses SysUtils;
-
-//function aumentar
-
-{Procedure para limpar todas as informações de livro emprestado de um usuário,
-usada tanto para fazer a devolução de um livro como para registrar um usuário
-novo}
-procedure LimparLivroEmprestado(aUsuario: TUsuario);
+{Procedure para aumentar o número de elementos da Array TUsuariosCadastrados em
++1 quando o usuário incluir novo usuário}
+procedure AumentarUsuariosCadastrados(aUsuariosCadastrados: TUsuariosCadastrados);
 begin
-  with aUsuario.LivroEmprestado.Livro do
-  begin
-    Cod        := 0;
-    Titulo     := '';
-    Autor      := '';
-    Genero     := '';
-    Prateleira := '';
-    Disponivel := true;
-  end;
-  aUsuario.LivroEmprestado.DataEmprestimo := 0;
-  aUsuario.LivroEmprestado.DataDevolucao  := 0;
+  setLength(aUsuariosCadastrados, Length(aUsuariosCadastrados) + 1);
 end;
 
-{Function para receber gerar um novo TUsuario. O código do livro de
-TLivroEmprestado começa sempre com 0 }
+{Function para receber gerar um novo TUsuario.}
 function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
   const aCod: Integer): TUsuario;
 var
@@ -63,7 +47,7 @@ begin
   xUsuario.Telefone                  := aTelefone;
   xUsuario.Email                     := aEmail;
   xUsuario.CPF                       := aCPF;
-  LimparLivroEmprestado(xUsuario);
+  LimparLivroEmprestado(xUsuario.LivroEmprestado);
   Result := xUsuario;
 end;
 
@@ -115,19 +99,6 @@ begin
   begin
     aUsuarios[I] := PreencherUsuario(NOME_EMAIL[I][0], NOME_EMAIL[I][1], NumeroAleatorio, NumeroAleatorio, (I + 1));
   end;
-end;
-
-procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
-begin
-  if aEmprestado.DataEmprestimo > 0 then
-  begin
-    MostrarLivro(aEmprestado.Livro);
-    writeln('Data de empréstimo: ' + DateToStr(aEmprestado.DataEmprestimo));
-    writeln('Data de devolução: ' + DateToStr(aEmprestado.DataDevolucao));
-  end
-  else
-    writeln('Nenhum livro emprestado no momento');
-
 end;
 
 

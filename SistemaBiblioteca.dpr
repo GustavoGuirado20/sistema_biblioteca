@@ -8,8 +8,8 @@ uses
   System.SysUtils,
   UUsuario in 'UUsuario.pas',
   ULivro in 'ULivro.pas',
-  UOperacoes in 'UOperacoes.pas';
-
+  UOperacoes in 'UOperacoes.pas',
+  ULivroEmprestado in 'ULivroEmprestado.pas';
 
 //Procedure para testar outros procedures e functions
 procedure ControladorTeste;

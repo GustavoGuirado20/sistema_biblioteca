@@ -14,21 +14,14 @@ type
 
   TBiblioteca = Array of TLivro;
 
-  TLivroEmprestado = Record
-    Livro: TLivro;
-    DataEmprestimo: TDate;
-    DataDevolucao: TDate;
-  End;
-
   function PreencherLivro(const aCod: Integer; const aTitulo, aAutor, aGenero, aPrateleira: String;
                           const aDisponivel: Boolean): TLivro;
   function MostrarStatus(aDisponivel: Boolean): String;
-  function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
-                                    aDataDevolucao: TDate): TLivroEmprestado;
+
   procedure PreencherBibliotecaInicial(var aBiblioteca: TBiblioteca);
   function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
                                                 aDisponivel: Boolean): Integer;
-  procedure EscreverPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+  procedure MostrarPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
   procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(aLivro: TLivro);
@@ -50,17 +43,6 @@ begin
   xLivro.Prateleira := aPrateleira;
   xLivro.Disponivel := aDisponivel;
   Result := xLivro;
-end;
-
-function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
-  aDataDevolucao: TDate): TLivroEmprestado;
-var
-  xLivroEmprestado: TLivroEmprestado;
-begin
-  xLivroEmprestado.Livro          := aLivro;
-  xLivroEmprestado.DataEmprestimo := aDataEmprestimo;
-  xLivroEmprestado.DataDevolucao  := aDataDevolucao;
-  Result := xLivroEmprestado;
 end;
 
 {Procedure para preencher a biblioteca quando o programa é iniciado com livros
@@ -101,8 +83,8 @@ begin
   end;
 end;
 
-{Procedure para aumentar o tamanho da TBiblioteca em +1 quando o usuário incluir
-novo livro}
+{Procedure para aumentar o número de elementos da Array TBiblioteca em +1
+quando o usuário incluir novo livro}
 procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
 begin
   SetLength(aBiblioteca, Length(aBiblioteca) + 1);
@@ -185,7 +167,7 @@ begin
   Result := Contador;
 end;
 
-procedure EscreverPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+procedure MostrarPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
 begin
   writeln(Format('Total de livros: %d', [Length(aBiblioteca)]));
   writeln(Format('Total de livros com status %s: %d', [MostrarStatus(aDisponivel), ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel)]));
