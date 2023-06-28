@@ -16,16 +16,18 @@ type
 
   function PreencherLivro(const aCod: Integer; const aTitulo, aAutor, aGenero, aPrateleira: String;
                           const aDisponivel: Boolean): TLivro;
-  function MostrarStatus(aDisponivel: Boolean): String;
+  function MostrarStatus(const aDisponivel: Boolean): String;
 
   procedure PreencherBibliotecaInicial(var aBiblioteca: TBiblioteca);
   function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
                                                 aDisponivel: Boolean): Integer;
-  procedure MostrarPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+  procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
   procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
-  procedure MostrarLivro(aLivro: TLivro);
-  procedure MostrarCatalogo(aBiblioteca: TBiblioteca);
+  procedure MostrarLivro(const aLivro: TLivro);
+  procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
+  function BuscarLivroPorCod(const aBiblioteca: TBiblioteca; const aCod: Integer): TLivro;
+  procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 
 implementation
 
@@ -91,7 +93,7 @@ begin
 end;
 
 //Procedure para imprimir na tela informações de um TLivro
-procedure MostrarLivro(aLivro: TLivro);
+procedure MostrarLivro(const aLivro: TLivro);
 begin
   writeln(Format('Título: %s, Autor: %s, Gênero: %s, Prateleira: %s, Status: %s',
               [aLivro.Titulo, aLivro.Autor, aLivro.Genero,
@@ -100,7 +102,7 @@ begin
 end;
 
 //Procedure para imprimir na tela todo o acervo cadastrado no array TBiblioteca
-procedure MostrarCatalogo(aBiblioteca: TBiblioteca);
+procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
 var
   I: Integer;
 begin
@@ -113,7 +115,7 @@ begin
 end;
 
 {Procedure para escrever na tela todos os livros emprestados ou livres.}
-procedure MostrarLivrosDisponiveisOuEmprestados(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 var
   xTexto: String;
   I, Contador: Integer;
@@ -126,6 +128,8 @@ begin
   end;
 end;
 
+{Procedure que permite ao usuário do sistema cadastrar um novo livro e o insere
+no último elemento da array aBiblioteca}
 procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
 var
   xTitulo, xAutor, xGenero: String;
@@ -145,7 +149,8 @@ begin
   MostrarLivro(aBiblioteca[Length(aBiblioteca) - 1]);
 end;
 
-function MostrarStatus(aDisponivel: Boolean): String;
+{Function que retorna String informando se o livro está disponível ou não}
+function MostrarStatus(const aDisponivel: Boolean): String;
 begin
   if aDisponivel then
     Result := 'Disponível'
@@ -153,6 +158,8 @@ begin
     Result := 'Emprestado';
 end;
 
+{Function que retorna Integer correspondendte ao número de livros disponíveis ou
+emprestados (aDisponível true para disponíveis e false para emprestados)}
 function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
   aDisponivel: Boolean): Integer;
 var
@@ -167,13 +174,31 @@ begin
   Result := Contador;
 end;
 
-procedure MostrarPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+{Procedure que mostra na tela o percentual de livros disponíveis  ou emprestados
+de acordo com o parâmetro aDisponivel}
+procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 begin
   writeln(Format('Total de livros: %d', [Length(aBiblioteca)]));
   writeln(Format('Total de livros com status %s: %d', [MostrarStatus(aDisponivel), ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel)]));
   writeln(Format('Porcentagem de livros com status %s: %s%%', [MostrarStatus(aDisponivel),
                   FormatFloat('#.##', ObterPorcentagem(ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel),
                   Length(aBiblioteca)))]));
+end;
+
+{Function que retorna um TLivro da array aBiblioteca cujo codigo corresponda ao parâmetro aCod}
+function BuscarLivroPorCod(const aBiblioteca: TBiblioteca; const aCod: Integer): TLivro;
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aBiblioteca)) do
+  begin
+    if aCod = aBiblioteca[I].cod then
+    begin
+      Result := aBiblioteca[I];
+      exit;
+    end;
+  end;
+  writeln('Não foi possível localizar nenhum livro com o código ' + aCod.ToString);
 end;
 
 end.

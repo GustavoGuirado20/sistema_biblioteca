@@ -12,26 +12,26 @@ type
     Telefone: String[11];
     Email: String;
     CPF: String[11];
-    LivroEmprestado: TLivroEmprestado;
+    LivrosEmprestados: THistorico;
     Historico: THistorico;
   End;
 
   TUsuariosCadastrados = Array of TUsuario;
 
-  procedure AumentarUsuariosCadastrados(aUsuariosCadastrados: TUsuariosCadastrados);
+  procedure AumentarUsuariosCadastrados(var aUsuariosCadastrados: TUsuariosCadastrados);
   procedure MostrarUsuario(aUsuario: TUsuario);
   function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
     const aCod: Integer): TUsuario;
   function NumeroAleatorio: String;
   procedure PreencherUsuariosCadastradosIniciais(var aUsuarios: TUsuariosCadastrados);
-  procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
+  procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
 
 implementation
 
 uses SysUtils;
 {Procedure para aumentar o número de elementos da Array TUsuariosCadastrados em
 +1 quando o usuário incluir novo usuário}
-procedure AumentarUsuariosCadastrados(aUsuariosCadastrados: TUsuariosCadastrados);
+procedure AumentarUsuariosCadastrados(var aUsuariosCadastrados: TUsuariosCadastrados);
 begin
   setLength(aUsuariosCadastrados, Length(aUsuariosCadastrados) + 1);
 end;
@@ -47,7 +47,7 @@ begin
   xUsuario.Telefone                  := aTelefone;
   xUsuario.Email                     := aEmail;
   xUsuario.CPF                       := aCPF;
-  LimparLivroEmprestado(xUsuario.LivroEmprestado);
+  //LimparLivroEmprestado(xUsuario.LivrosEmprestados);
   Result := xUsuario;
 end;
 
@@ -136,12 +136,12 @@ begin
   writeln('Telefone: ' + FormatarTelefone(aUsuario.Telefone));
   writeln('CPF     : ' + FormatarCPF(aUsuario.CPF));
   writeln('Email   : ' + aUsuario.Email);
-  MostrarLivroEmprestado(aUsuario.LivroEmprestado);
+  //MostrarLivroEmprestado(aUsuario.LivrosEmprestados);
   writeln;
 end;
 
 {Procedure para escrever as informações de todos os usuários cadastrados na tela}
-procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
+procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
 var
   I: Integer;
 begin
@@ -167,7 +167,8 @@ begin
   readln(xEmail);
   write('CPF: ');
   readln(xCPF);
-  PreencherUsuario(xNome, xEmail, xCPF, xTelefone, Length(aCadastrados));
+  aCadastrados[Length(aCadastrados) - 1] := PreencherUsuario(xNome, xEmail,
+    xCPF, xTelefone, Length(aCadastrados));
 end;
 
 end.
