@@ -8,18 +8,20 @@ uses
   System.SysUtils,
   UUsuario in 'UUsuario.pas',
   ULivro in 'ULivro.pas',
-  UOperacoes in 'UOperacoes.pas';
-
+  UOperacoes in 'UOperacoes.pas',
+  ULivroEmprestado in 'ULivroEmprestado.pas';
 
 //Procedure para testar outros procedures e functions
 procedure ControladorTeste;
 var
   xBiblioteca: TBiblioteca;
-  xUsuariosCadastraddos: TUsuariosCadastrados;
+  xUsuariosCadastrados: TUsuariosCadastrados;
 begin
   preencherBibliotecaInicial(xBiblioteca);
-  PreencherUsuariosCadastradosIniciais(xUsuariosCadastraddos);
-  MostrarUsuariosCastrados(xUsuariosCadastraddos);
+  PreencherUsuariosCadastradosIniciais(xUsuariosCadastrados);
+  //MostrarUsuariosCastrados(xUsuariosCadastraddos);
+  EmprestarLivro(xUsuariosCadastrados[0].LivrosEmprestados, xBiblioteca);
+  MostrarUsuario(xUsuariosCadastrados[0]);
   //MostrarCatalogo(xBiblioteca);
   //writeln(Length(xBiblioteca));
   //EscreverPorcentagemLivros(xBiblioteca, false);

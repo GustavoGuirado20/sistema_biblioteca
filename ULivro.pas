@@ -14,25 +14,20 @@ type
 
   TBiblioteca = Array of TLivro;
 
-  TLivroEmprestado = Record
-    Livro: TLivro;
-    DataEmprestimo: TDate;
-    DataDevolucao: TDate;
-  End;
-
   function PreencherLivro(const aCod: Integer; const aTitulo, aAutor, aGenero, aPrateleira: String;
                           const aDisponivel: Boolean): TLivro;
-  function MostrarStatus(aDisponivel: Boolean): String;
-  function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
-                                    aDataDevolucao: TDate): TLivroEmprestado;
+  function MostrarStatus(const aDisponivel: Boolean): String;
+
   procedure PreencherBibliotecaInicial(var aBiblioteca: TBiblioteca);
   function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
                                                 aDisponivel: Boolean): Integer;
-  procedure EscreverPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+  procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
   procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
-  procedure AumentarTamanhoArray(var aBiblioteca: TBiblioteca);
-  procedure MostrarLivro(aLivro: TLivro);
-  procedure MostrarCatalogo(aBiblioteca: TBiblioteca);
+  procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
+  procedure MostrarLivro(const aLivro: TLivro);
+  procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
+  function BuscarLivroPorCod(var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
+  procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 
 implementation
 
@@ -50,17 +45,6 @@ begin
   xLivro.Prateleira := aPrateleira;
   xLivro.Disponivel := aDisponivel;
   Result := xLivro;
-end;
-
-function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
-  aDataDevolucao: TDate): TLivroEmprestado;
-var
-  xLivroEmprestado: TLivroEmprestado;
-begin
-  xLivroEmprestado.Livro          := aLivro;
-  xLivroEmprestado.DataEmprestimo := aDataEmprestimo;
-  xLivroEmprestado.DataDevolucao  := aDataDevolucao;
-  Result := xLivroEmprestado;
 end;
 
 {Procedure para preencher a biblioteca quando o programa é iniciado com livros
@@ -101,15 +85,15 @@ begin
   end;
 end;
 
-{Procedure para aumentar o tamanho da TBiblioteca em +1 quando o usuário incluir
-novo livro}
-procedure AumentarTamanhoArray(var aBiblioteca: TBiblioteca);
+{Procedure para aumentar o número de elementos da Array TBiblioteca em +1
+quando o usuário incluir novo livro}
+procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
 begin
   SetLength(aBiblioteca, Length(aBiblioteca) + 1);
 end;
 
 //Procedure para imprimir na tela informações de um TLivro
-procedure MostrarLivro(aLivro: TLivro);
+procedure MostrarLivro(const aLivro: TLivro);
 begin
   writeln(Format('Título: %s, Autor: %s, Gênero: %s, Prateleira: %s, Status: %s',
               [aLivro.Titulo, aLivro.Autor, aLivro.Genero,
@@ -118,7 +102,7 @@ begin
 end;
 
 //Procedure para imprimir na tela todo o acervo cadastrado no array TBiblioteca
-procedure MostrarCatalogo(aBiblioteca: TBiblioteca);
+procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
 var
   I: Integer;
 begin
@@ -131,7 +115,7 @@ begin
 end;
 
 {Procedure para escrever na tela todos os livros emprestados ou livres.}
-procedure MostrarLivrosDisponiveisOuEmprestados(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 var
   xTexto: String;
   I, Contador: Integer;
@@ -144,12 +128,14 @@ begin
   end;
 end;
 
+{Procedure que permite ao usuário do sistema cadastrar um novo livro e o insere
+no último elemento da array aBiblioteca}
 procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
 var
   xTitulo, xAutor, xGenero: String;
   xPrateleira: String[2];
 begin
-  AumentarTamanhoArray(aBiblioteca);
+  AumentarBiblioteca(aBiblioteca);
   write('Insira o título do livro: ');
   readln(xTitulo);
   write('Insira o nome do autor: ');
@@ -163,7 +149,8 @@ begin
   MostrarLivro(aBiblioteca[Length(aBiblioteca) - 1]);
 end;
 
-function MostrarStatus(aDisponivel: Boolean): String;
+{Function que retorna String informando se o livro está disponível ou não}
+function MostrarStatus(const aDisponivel: Boolean): String;
 begin
   if aDisponivel then
     Result := 'Disponível'
@@ -171,10 +158,12 @@ begin
     Result := 'Emprestado';
 end;
 
+{Function que retorna Integer correspondendte ao número de livros disponíveis ou
+emprestados (aDisponível true para disponíveis e false para emprestados)}
 function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
   aDisponivel: Boolean): Integer;
 var
-I, Contador: Integer;
+  I, Contador: Integer;
 begin
   Contador := 0;
   for I := 0 to pred(Length(aBiblioteca)) do
@@ -185,13 +174,33 @@ begin
   Result := Contador;
 end;
 
-procedure EscreverPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
+{Procedure que mostra na tela o percentual de livros disponíveis  ou emprestados
+de acordo com o parâmetro aDisponivel}
+procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 begin
   writeln(Format('Total de livros: %d', [Length(aBiblioteca)]));
   writeln(Format('Total de livros com status %s: %d', [MostrarStatus(aDisponivel), ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel)]));
   writeln(Format('Porcentagem de livros com status %s: %s%%', [MostrarStatus(aDisponivel),
                   FormatFloat('#.##', ObterPorcentagem(ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel),
                   Length(aBiblioteca)))]));
+end;
+
+{Function que retorna um TLivro da array aBiblioteca cujo codigo corresponda ao parâmetro aCod}
+function BuscarLivroPorCod(var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aBiblioteca)) do
+  begin
+    if aCod = aBiblioteca[I].cod then
+    begin
+      Result := true;
+      aLivro := aBiblioteca[I];
+      exit;
+    end;
+  end;
+  writeln('Não foi possível localizar nenhum livro com o código ' + aCod.ToString);
+  Result := false;
 end;
 
 end.

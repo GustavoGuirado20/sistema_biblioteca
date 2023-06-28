@@ -2,49 +2,56 @@ unit UUsuario;
 
 interface
 
-uses ULivro;
+uses ULivro, ULivroEmprestado;
 
 type
-  THistorico = Array of TLivroEmprestado;
 
   TUsuario = Record
     Cod: Integer;
     Nome: String;
-    Telefone: String;
+    Telefone: String[11];
     Email: String;
-    CPF: String;
-    LivroEmprestado: TLivroEmprestado;
+    CPF: String[11];
+    LivrosEmprestados: THistorico;
     Historico: THistorico;
   End;
 
   TUsuariosCadastrados = Array of TUsuario;
 
+  procedure AumentarUsuariosCadastrados(var aUsuariosCadastrados: TUsuariosCadastrados);
   procedure MostrarUsuario(aUsuario: TUsuario);
   function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
     const aCod: Integer): TUsuario;
   function NumeroAleatorio: String;
   procedure PreencherUsuariosCadastradosIniciais(var aUsuarios: TUsuariosCadastrados);
-  procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
-
+  procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
 
 implementation
 
 uses SysUtils;
+{Procedure para aumentar o número de elementos da Array TUsuariosCadastrados em
++1 quando o usuário incluir novo usuário}
+procedure AumentarUsuariosCadastrados(var aUsuariosCadastrados: TUsuariosCadastrados);
+begin
+  setLength(aUsuariosCadastrados, Length(aUsuariosCadastrados) + 1);
+end;
 
+{Function para receber gerar um novo TUsuario.}
 function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
   const aCod: Integer): TUsuario;
 var
   xUsuario: TUsuario;
 begin
-  xUsuario.Cod      := aCod;
-  xUsuario.Nome     := aNome;
-  xUsuario.Telefone := aTelefone;
-  xUsuario.Email    := aEmail;
-  xUsuario.CPF      := aCPF;
+  xUsuario.Cod                       := aCod;
+  xUsuario.Nome                      := aNome;
+  xUsuario.Telefone                  := aTelefone;
+  xUsuario.Email                     := aEmail;
+  xUsuario.CPF                       := aCPF;
+  //LimparLivroEmprestado(xUsuario.LivrosEmprestados);
   Result := xUsuario;
 end;
 
-//Gera números aleatórios para preencher Telefone e CPF de usuários
+{Function para gerar números aleatórios para preencher Telefone e CPF de usuários}
 function NumeroAleatorio: String;
 var
   xNumeroString: String;
@@ -62,6 +69,8 @@ begin
   Result := xNumeroString;
 end;
 
+{Procedure para popular a Array de usuários automaticamente para não termos que
+preenche-la toda hora}
 procedure PreencherUsuariosCadastradosIniciais(var aUsuarios: TUsuariosCadastrados);
 const
   NOME_EMAIL: array[0..14,0..1] of String =
@@ -92,6 +101,10 @@ begin
   end;
 end;
 
+
+{Function para retornar o telefone de TUsuario na formatação (##) #####-####
+e muda o terceiro algarismo para 9 para simular um número de telefone real
+caso possua 11 caracteres, senão retorna a string original}
 function FormatarTelefone(aTel: String): String;
 begin
   if aTel.Length = 11 then
@@ -104,6 +117,8 @@ begin
     Result := aTel;
 end;
 
+{Function para retornar o telefone de TUsuario na formatação ###.###.###-##
+caso possua 11 caracteres, senão retorna a string original}
 function FormatarCPF(aCPF: String): String;
 begin
   if aCPF.Length = 11 then
@@ -113,6 +128,7 @@ begin
     Result := aCPF;
 end;
 
+{Procedure para escrever as informações de um usuário na tela}
 procedure MostrarUsuario(aUsuario: TUsuario);
 begin
   writeln('Código  : ' + aUsuario.Cod.ToString);
@@ -120,10 +136,13 @@ begin
   writeln('Telefone: ' + FormatarTelefone(aUsuario.Telefone));
   writeln('CPF     : ' + FormatarCPF(aUsuario.CPF));
   writeln('Email   : ' + aUsuario.Email);
+  //MostrarLivroEmprestado(aUsuario.LivrosEmprestados);
+  MostrarHistorico(aUsuario.LivrosEmprestados);
   writeln;
 end;
 
-procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
+{Procedure para escrever as informações de todos os usuários cadastrados na tela}
+procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
 var
   I: Integer;
 begin
@@ -132,6 +151,25 @@ begin
   begin
     MostrarUsuario(aUsuarios[I]);
   end;
+end;
+
+{Procedure para que o usuário do sistema cadastre um novo usuário da biblioteca}
+procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
+var
+  xNome, xTelefone, xEmail, xCPF: String;
+begin
+  AumentarUsuariosCadastrados(aCadastrados);
+  writeln('Insira os dados do usuário:');
+  write('Nome: ');
+  readln(xNome);
+  write('Telefone com DDD: ');
+  readln(xTelefone);
+  write('E-mail: ');
+  readln(xEmail);
+  write('CPF: ');
+  readln(xCPF);
+  aCadastrados[Length(aCadastrados) - 1] := PreencherUsuario(xNome, xEmail,
+    xCPF, xTelefone, Length(aCadastrados));
 end;
 
 end.
