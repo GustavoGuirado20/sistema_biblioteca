@@ -10,9 +10,9 @@ type
   TUsuario = Record
     Cod: Integer;
     Nome: String;
-    Telefone: String;
+    Telefone: String[11];
     Email: String;
-    CPF: String;
+    CPF: String[11];
     LivroEmprestado: TLivroEmprestado;
     Historico: THistorico;
   End;
@@ -31,20 +31,43 @@ implementation
 
 uses SysUtils;
 
+//function aumentar
+
+{Procedure para limpar todas as informações de livro emprestado de um usuário,
+usada tanto para fazer a devolução de um livro como para registrar um usuário
+novo}
+procedure LimparLivroEmprestado(aUsuario: TUsuario);
+begin
+  with aUsuario.LivroEmprestado.Livro do
+  begin
+    Cod        := 0;
+    Titulo     := '';
+    Autor      := '';
+    Genero     := '';
+    Prateleira := '';
+    Disponivel := true;
+  end;
+  aUsuario.LivroEmprestado.DataEmprestimo := 0;
+  aUsuario.LivroEmprestado.DataDevolucao  := 0;
+end;
+
+{Function para receber gerar um novo TUsuario. O código do livro de
+TLivroEmprestado começa sempre com 0 }
 function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
   const aCod: Integer): TUsuario;
 var
   xUsuario: TUsuario;
 begin
-  xUsuario.Cod      := aCod;
-  xUsuario.Nome     := aNome;
-  xUsuario.Telefone := aTelefone;
-  xUsuario.Email    := aEmail;
-  xUsuario.CPF      := aCPF;
+  xUsuario.Cod                       := aCod;
+  xUsuario.Nome                      := aNome;
+  xUsuario.Telefone                  := aTelefone;
+  xUsuario.Email                     := aEmail;
+  xUsuario.CPF                       := aCPF;
+  LimparLivroEmprestado(xUsuario);
   Result := xUsuario;
 end;
 
-//Gera números aleatórios para preencher Telefone e CPF de usuários
+{Function para gerar números aleatórios para preencher Telefone e CPF de usuários}
 function NumeroAleatorio: String;
 var
   xNumeroString: String;
@@ -62,6 +85,8 @@ begin
   Result := xNumeroString;
 end;
 
+{Procedure para popular a Array de usuários automaticamente para não termos que
+preenche-la toda hora}
 procedure PreencherUsuariosCadastradosIniciais(var aUsuarios: TUsuariosCadastrados);
 const
   NOME_EMAIL: array[0..14,0..1] of String =
@@ -92,6 +117,23 @@ begin
   end;
 end;
 
+procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
+begin
+  if aEmprestado.DataEmprestimo > 0 then
+  begin
+    MostrarLivro(aEmprestado.Livro);
+    writeln('Data de empréstimo: ' + DateToStr(aEmprestado.DataEmprestimo));
+    writeln('Data de devolução: ' + DateToStr(aEmprestado.DataDevolucao));
+  end
+  else
+    writeln('Nenhum livro emprestado no momento');
+
+end;
+
+
+{Function para retornar o telefone de TUsuario na formatação (##) #####-####
+e muda o terceiro algarismo para 9 para simular um número de telefone real
+caso possua 11 caracteres, senão retorna a string original}
 function FormatarTelefone(aTel: String): String;
 begin
   if aTel.Length = 11 then
@@ -104,6 +146,8 @@ begin
     Result := aTel;
 end;
 
+{Function para retornar o telefone de TUsuario na formatação ###.###.###-##
+caso possua 11 caracteres, senão retorna a string original}
 function FormatarCPF(aCPF: String): String;
 begin
   if aCPF.Length = 11 then
@@ -113,6 +157,7 @@ begin
     Result := aCPF;
 end;
 
+{Procedure para escrever as informações de um usuário na tela}
 procedure MostrarUsuario(aUsuario: TUsuario);
 begin
   writeln('Código  : ' + aUsuario.Cod.ToString);
@@ -120,9 +165,11 @@ begin
   writeln('Telefone: ' + FormatarTelefone(aUsuario.Telefone));
   writeln('CPF     : ' + FormatarCPF(aUsuario.CPF));
   writeln('Email   : ' + aUsuario.Email);
+  MostrarLivroEmprestado(aUsuario.LivroEmprestado);
   writeln;
 end;
 
+{Procedure para escrever as informações de todos os usuários cadastrados na tela}
 procedure MostrarUsuariosCastrados(aUsuarios: TUsuariosCadastrados);
 var
   I: Integer;

@@ -174,7 +174,7 @@ end;
 function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
   aDisponivel: Boolean): Integer;
 var
-I, Contador: Integer;
+  I, Contador: Integer;
 begin
   Contador := 0;
   for I := 0 to pred(Length(aBiblioteca)) do
