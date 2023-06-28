@@ -38,7 +38,7 @@ begin
   writeln('4 - Consultar quantidade de livros por autor');
   writeln('5 - Consultar disponibilidade de um título');
   writeln('6 - Consultar disponibilidade de livros por gênero');
-  writeln('8 - Sair');
+  writeln('0 - Sair');
   writeln;
   readln(opc);
   Result := opc;
