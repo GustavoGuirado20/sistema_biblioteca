@@ -152,4 +152,22 @@ begin
   end;
 end;
 
+{Procedure para que o usuário do sistema cadastre um novo usuário da biblioteca}
+procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
+var
+  xNome, xTelefone, xEmail, xCPF: String;
+begin
+  AumentarUsuariosCadastrados(aCadastrados);
+  writeln('Insira os dados do usuário:');
+  write('Nome: ');
+  readln(xNome);
+  write('Telefone com DDD: ');
+  readln(xTelefone);
+  write('E-mail: ');
+  readln(xEmail);
+  write('CPF: ');
+  readln(xCPF);
+  PreencherUsuario(xNome, xEmail, xCPF, xTelefone, Length(aCadastrados));
+end;
+
 end.
