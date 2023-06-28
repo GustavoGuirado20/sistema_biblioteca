@@ -30,7 +30,7 @@ type
                                                 aDisponivel: Boolean): Integer;
   procedure EscreverPorcentagemLivros(aBiblioteca: TBiblioteca; aDisponivel: Boolean);
   procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
-  procedure AumentarTamanhoArray(var aBiblioteca: TBiblioteca);
+  procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(aLivro: TLivro);
   procedure MostrarCatalogo(aBiblioteca: TBiblioteca);
 
@@ -103,7 +103,7 @@ end;
 
 {Procedure para aumentar o tamanho da TBiblioteca em +1 quando o usuário incluir
 novo livro}
-procedure AumentarTamanhoArray(var aBiblioteca: TBiblioteca);
+procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
 begin
   SetLength(aBiblioteca, Length(aBiblioteca) + 1);
 end;
@@ -149,7 +149,7 @@ var
   xTitulo, xAutor, xGenero: String;
   xPrateleira: String[2];
 begin
-  AumentarTamanhoArray(aBiblioteca);
+  AumentarBiblioteca(aBiblioteca);
   write('Insira o título do livro: ');
   readln(xTitulo);
   write('Insira o nome do autor: ');
