@@ -13,7 +13,7 @@ type
 
   THistorico = Array of TLivroEmprestado;
 
-  procedure aumentarHistorico(aHistorico: THistorico);
+  procedure AumentarHistorico(var aHistorico: THistorico);
   function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
                                     aDataDevolucao: TDate): TLivroEmprestado;
   procedure LimparLivroEmprestado(aEmprestado: TLivroEmprestado);
@@ -25,7 +25,7 @@ uses SysUtils;
 
 {Procedure para aumentar o número de elementos da Array TBiblioteca em +1
 quando o usuário incluir novo usuário}
-procedure aumentarHistorico(aHistorico: THistorico);
+procedure aumentarHistorico(var aHistorico: THistorico);
 begin
   setLength(aHistorico, Length(aHistorico) + 1);
 end;
@@ -73,5 +73,33 @@ begin
   else
     writeln('Nenhum livro emprestado no momento');
 end;
+
+{Procedure EmprestarLivro(aLivrosEmprestados: THistorico; aBiblioteca: TBiblioteca);
+var
+  xCod, I: Integer;
+  xLivro: TLivro;
+  xConfirmar: char;
+begin
+  if Length(aLivrosEmprestados) > 5 then
+  begin
+    writeln('O usuário já possui 5 livros emprestados');
+    exit;
+  end;
+
+  AumentarHistorico(aLivrosEmprestados);
+  write('Insira o código do livro emprestado: ');
+  readln(xCod);
+  while (not BuscarLivroPorCod(xLivro, aBiblioteca, xCod)) do
+  begin
+    writeln('Livro de código ' + xCod.ToString + ' não localizado. Insira um ' +
+    'número correto ou 0 para sair.');
+    write('Código: ');
+    readln(xCod);
+    if xCod = 0 then
+      exit;
+  end;
+  MostrarLivro(xLivro);
+  writeln('Deseja emprestar o livro
+end;}
 
 end.

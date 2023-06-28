@@ -26,7 +26,7 @@ type
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(const aLivro: TLivro);
   procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
-  function BuscarLivroPorCod(const aBiblioteca: TBiblioteca; const aCod: Integer): TLivro;
+  function BuscarLivroPorCod(var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
   procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 
 implementation
@@ -186,7 +186,7 @@ begin
 end;
 
 {Function que retorna um TLivro da array aBiblioteca cujo codigo corresponda ao parâmetro aCod}
-function BuscarLivroPorCod(const aBiblioteca: TBiblioteca; const aCod: Integer): TLivro;
+function BuscarLivroPorCod(var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
 var
   I: Integer;
 begin
@@ -194,11 +194,13 @@ begin
   begin
     if aCod = aBiblioteca[I].cod then
     begin
-      Result := aBiblioteca[I];
+      Result := true;
+      aLivro := aBiblioteca[I];
       exit;
     end;
   end;
   writeln('Não foi possível localizar nenhum livro com o código ' + aCod.ToString);
+  Result := false;
 end;
 
 end.
