@@ -18,10 +18,13 @@ type
                                     aDataDevolucao: TDate): TLivroEmprestado;
   procedure LimparLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
+  function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
+  procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
+  procedure MostrarHistorico(aHistorico: THistorico);
 
 implementation
 
-uses SysUtils;
+uses SysUtils, DateUtils;
 
 {Procedure para aumentar o número de elementos da Array TBiblioteca em +1
 quando o usuário incluir novo usuário}
@@ -30,6 +33,12 @@ begin
   setLength(aHistorico, Length(aHistorico) + 1);
 end;
 
+
+
+function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
+begin
+  Result := IncDay(aDataEmprestimo, aDias);
+end;
 {Procedure para limpar todas as informações de livro emprestado de um usuário,
 usada tanto para fazer a devolução de um livro como para registrar um usuário
 novo}
@@ -69,16 +78,33 @@ begin
     MostrarLivro(aEmprestado.Livro);
     writeln('Data de empréstimo: ' + DateToStr(aEmprestado.DataEmprestimo));
     writeln('Data de devolução: ' + DateToStr(aEmprestado.DataDevolucao));
-  end
-  else
-    writeln('Nenhum livro emprestado no momento');
+  end;
+  {else
+    writeln('Nenhum livro emprestado no momento');}
 end;
 
-{Procedure EmprestarLivro(aLivrosEmprestados: THistorico; aBiblioteca: TBiblioteca);
+procedure MostrarHistorico(aHistorico: THistorico);
+var
+  I: Integer;
+begin
+  if Length(aHistorico) = 0 then
+  begin
+    writeln('Nenhum livro emprestado no momento');
+    exit;
+  end;
+  writeln('Total de livros emprestados atualmente: ' + Length(aHistorico).ToString);
+  for I := 0 to pred(Length(aHistorico)) do
+  begin
+    MostrarLivroEmprestado(aHistorico[I]);
+  end;
+
+end;
+
+procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
 var
   xCod, I: Integer;
   xLivro: TLivro;
-  xConfirmar: char;
+  xConfirma: char;
 begin
   if Length(aLivrosEmprestados) > 5 then
   begin
@@ -87,19 +113,24 @@ begin
   end;
 
   AumentarHistorico(aLivrosEmprestados);
-  write('Insira o código do livro emprestado: ');
-  readln(xCod);
-  while (not BuscarLivroPorCod(xLivro, aBiblioteca, xCod)) do
-  begin
-    writeln('Livro de código ' + xCod.ToString + ' não localizado. Insira um ' +
-    'número correto ou 0 para sair.');
-    write('Código: ');
+  Repeat
+    write('Insira o código do livro a ser emprestado: ');
     readln(xCod);
-    if xCod = 0 then
-      exit;
-  end;
-  MostrarLivro(xLivro);
-  writeln('Deseja emprestar o livro
-end;}
+    while (not BuscarLivroPorCod(xLivro, aBiblioteca, xCod)) do
+    begin
+      writeln('Livro de código ' + xCod.ToString + ' não localizado. Insira um ' +
+      'número correto ou 0 para sair.');
+      write('Código: ');
+      readln(xCod);
+      if xCod = 0 then
+        exit;
+    end;
+    MostrarLivro(xLivro);
+    writeln('Deseja emprestar o livro ' + xLivro.Titulo +'? (S/N)');
+    readln(xConfirma);
+  until UpCase(xConfirma) = 'S';
+  aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
+    PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
+end;
 
 end.

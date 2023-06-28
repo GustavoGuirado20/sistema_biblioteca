@@ -15,11 +15,13 @@ uses
 procedure ControladorTeste;
 var
   xBiblioteca: TBiblioteca;
-  xUsuariosCadastraddos: TUsuariosCadastrados;
+  xUsuariosCadastrados: TUsuariosCadastrados;
 begin
   preencherBibliotecaInicial(xBiblioteca);
-  PreencherUsuariosCadastradosIniciais(xUsuariosCadastraddos);
-  MostrarUsuariosCastrados(xUsuariosCadastraddos);
+  PreencherUsuariosCadastradosIniciais(xUsuariosCadastrados);
+  //MostrarUsuariosCastrados(xUsuariosCadastraddos);
+  EmprestarLivro(xUsuariosCadastrados[0].LivrosEmprestados, xBiblioteca);
+  MostrarUsuario(xUsuariosCadastrados[0]);
   //MostrarCatalogo(xBiblioteca);
   //writeln(Length(xBiblioteca));
   //EscreverPorcentagemLivros(xBiblioteca, false);

@@ -137,6 +137,7 @@ begin
   writeln('CPF     : ' + FormatarCPF(aUsuario.CPF));
   writeln('Email   : ' + aUsuario.Email);
   //MostrarLivroEmprestado(aUsuario.LivrosEmprestados);
+  MostrarHistorico(aUsuario.LivrosEmprestados);
   writeln;
 end;
 
