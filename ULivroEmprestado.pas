@@ -51,7 +51,7 @@ end;
 
 procedure AtualizarMulta(aLivroEmprestado: TLivroEmprestado);
 begin
-  aLivroEmprestado.Multa := CalcularMulta(aLivroEmprestado.DataDevolucao);
+  aLivroEmprestado.Multa := aLivroEmprestado.Multa + CalcularMulta(aLivroEmprestado.DataDevolucao);
 end;
 
 function FormatarMulta(aMulta: double): String;
@@ -105,8 +105,10 @@ begin
     MostrarLivro(aEmprestado.Livro);
     writeln('Data de empréstimo: ' + DateToStr(aEmprestado.DataEmprestimo));
     writeln('Data de devolução: ' + DateToStr(aEmprestado.DataDevolucao));
-    if CalcularMulta(aEmprestado.DataDevolucao) > 0 then
+    if aEmprestado.Multa > 0 then
+    begin
       writeln('Multa: ' + FormatarMulta(aEmprestado.Multa));
+    end;
   end;
   {else
     writeln('Nenhum livro emprestado no momento');}
@@ -133,7 +135,7 @@ end;
 
 procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
 var
-  xCod, I: Integer;
+  xIndice, xCod, I: Integer;
   xLivro: TLivro;
   xConfirma: char;
 begin
@@ -146,7 +148,7 @@ begin
   Repeat
     write('Insira o código do livro a ser emprestado: ');
     readln(xCod);
-    while (not BuscarLivroPorCod(xLivro, aBiblioteca, xCod)) do
+    while (not BuscarLivroPorCod(xIndice, xLivro, aBiblioteca, xCod)) do
     begin
       writeln('Livro de código ' + xCod.ToString + ' não localizado. Insira um ' +
       'número correto ou 0 para sair.');
@@ -167,7 +169,7 @@ begin
   AumentarHistorico(aLivrosEmprestados);
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
     PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
-  aBiblioteca[xCod].Disponivel := false;
+  aBiblioteca[xIndice].Disponivel := false;
 end;
 
 end.

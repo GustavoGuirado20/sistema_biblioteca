@@ -26,7 +26,7 @@ type
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(const aLivro: TLivro);
   procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
-  function BuscarLivroPorCod(var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
+  function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
   procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 
 implementation
@@ -186,7 +186,7 @@ begin
 end;
 
 {Function que retorna um TLivro da array aBiblioteca cujo codigo corresponda ao parâmetro aCod}
-function BuscarLivroPorCod(var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
+function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
 var
   I: Integer;
 begin
@@ -194,8 +194,9 @@ begin
   begin
     if aCod = aBiblioteca[I].cod then
     begin
-      Result := true;
-      aLivro := aBiblioteca[I];
+      Result  := true;
+      aLivro  := aBiblioteca[I];
+      aIndice := I;
       exit;
     end;
   end;
