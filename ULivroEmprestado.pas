@@ -14,12 +14,14 @@ type
 
   THistorico = Array of TLivroEmprestado;
 
-  procedure AumentarHistorico(var aHistorico: THistorico);
+  function FormatarMulta(aMulta: double): String;
+
   function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
                                     aDataDevolucao: TDate): TLivroEmprestado;
+  function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
+  procedure AumentarHistorico(var aHistorico: THistorico);
   procedure LimparLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
-  function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
   procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
   procedure MostrarHistorico(aHistorico: THistorico);
 
@@ -32,6 +34,11 @@ quando o usuário incluir novo usuário}
 procedure aumentarHistorico(var aHistorico: THistorico);
 begin
   setLength(aHistorico, Length(aHistorico) + 1);
+end;
+
+function CalcularMulta(DataDevolucao: TDate): double;
+begin
+
 end;
 
 function FormatarMulta(aMulta: double): String;
@@ -59,6 +66,7 @@ begin
   end;
   aEmprestado.DataEmprestimo := 0;
   aEmprestado.DataDevolucao  := 0;
+  aEmprestado.Multa          := 0;
 end;
 
 {Function que retorna um Record TLivroEmprestado}
@@ -82,6 +90,7 @@ begin
     MostrarLivro(aEmprestado.Livro);
     writeln('Data de empréstimo: ' + DateToStr(aEmprestado.DataEmprestimo));
     writeln('Data de devolução: ' + DateToStr(aEmprestado.DataDevolucao));
+    writeln('Multa: ' + FormatarMulta(aEmprestado.Multa));
   end;
   {else
     writeln('Nenhum livro emprestado no momento');}
@@ -131,12 +140,18 @@ begin
         exit;
     end;
     MostrarLivro(xLivro);
+    if xLivro.Disponivel = false then
+    begin
+      writeln('O livro não está disponível. Selecione outro');
+      continue;
+    end;
     writeln('Deseja emprestar o livro ' + xLivro.Titulo +'? (S/N)');
     readln(xConfirma);
   until UpCase(xConfirma) = 'S';
   AumentarHistorico(aLivrosEmprestados);
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
     PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
+  aBiblioteca[xCod].Disponivel := false;
 end;
 
 end.
