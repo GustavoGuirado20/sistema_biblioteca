@@ -36,9 +36,16 @@ begin
   setLength(aHistorico, Length(aHistorico) + 1);
 end;
 
-function CalcularMulta(DataDevolucao: TDate): double;
+function FormatarData(aData: TDate): String;
 begin
+  Result := FormatDateTime('dd/mm/yyyy', aData);
+end;
 
+function CalcularMulta(aDataDevolucao: TDate): double;
+begin
+  Result := 2 * (DaysBetween(aDataDevolucao, Date)).toDouble;
+  if Result < 0 then
+    Result := 0;
 end;
 
 function FormatarMulta(aMulta: double): String;
@@ -50,6 +57,7 @@ function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate
 begin
   Result := IncDay(aDataEmprestimo, aDias);
 end;
+
 {Procedure para limpar todas as informações de livro emprestado de um usuário,
 usada tanto para fazer a devolução de um livro como para registrar um usuário
 novo}
@@ -78,6 +86,7 @@ begin
   xLivroEmprestado.Livro          := aLivro;
   xLivroEmprestado.DataEmprestimo := aDataEmprestimo;
   xLivroEmprestado.DataDevolucao  := aDataDevolucao;
+  xLivroEmprestado.Multa          := CalcularMulta(aDataDevolucao);
   Result := xLivroEmprestado;
 end;
 
