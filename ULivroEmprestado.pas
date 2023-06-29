@@ -9,6 +9,7 @@ type
     Livro: TLivro;
     DataEmprestimo: TDate;
     DataDevolucao: TDate;
+    Multa: double;
   End;
 
   THistorico = Array of TLivroEmprestado;
@@ -33,7 +34,10 @@ begin
   setLength(aHistorico, Length(aHistorico) + 1);
 end;
 
-
+function FormatarMulta(aMulta: double): String;
+begin
+  Result := FormatFloat('R$ 0,00', aMulta);
+end;
 
 function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
 begin
