@@ -98,7 +98,6 @@ begin
   writeln(Format('Título: %s, Autor: %s, Gênero: %s, Prateleira: %s, Status: %s',
               [aLivro.Titulo, aLivro.Autor, aLivro.Genero,
               aLivro.Prateleira, MostrarStatus(aLivro.Disponivel)]));
-  writeln;
 end;
 
 //Procedure para imprimir na tela todo o acervo cadastrado no array TBiblioteca
@@ -111,6 +110,7 @@ begin
   begin
     writeln('Informações do livro ' + (I + 1).ToString);
     MostrarLivro(aBiblioteca[I]);
+    writeln;
   end;
 end;
 
@@ -199,7 +199,7 @@ begin
       exit;
     end;
   end;
-  writeln('Não foi possível localizar nenhum livro com o código ' + aCod.ToString);
+  //writeln('Não foi possível localizar nenhum livro com o código ' + aCod.ToString);
   Result := false;
 end;
 

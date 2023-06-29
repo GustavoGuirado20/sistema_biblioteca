@@ -92,11 +92,13 @@ begin
     writeln('Nenhum livro emprestado no momento');
     exit;
   end;
-  writeln('Total de livros emprestados atualmente: ' + Length(aHistorico).ToString);
+  writeln('-----------------------------------------------------');
+  writeln('Total de livros emprestados: ' + Length(aHistorico).ToString);
   for I := 0 to pred(Length(aHistorico)) do
   begin
     MostrarLivroEmprestado(aHistorico[I]);
   end;
+  writeln('-----------------------------------------------------');
 
 end;
 
@@ -112,7 +114,6 @@ begin
     exit;
   end;
 
-  AumentarHistorico(aLivrosEmprestados);
   Repeat
     write('Insira o código do livro a ser emprestado: ');
     readln(xCod);
@@ -129,6 +130,7 @@ begin
     writeln('Deseja emprestar o livro ' + xLivro.Titulo +'? (S/N)');
     readln(xConfirma);
   until UpCase(xConfirma) = 'S';
+  AumentarHistorico(aLivrosEmprestados);
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
     PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
 end;
