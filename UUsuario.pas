@@ -16,6 +16,7 @@ type
     Historico: THistorico;
   End;
 
+  //tttttt
   TUsuariosCadastrados = Array of TUsuario;
 
   procedure AumentarUsuariosCadastrados(var aUsuariosCadastrados: TUsuariosCadastrados);
