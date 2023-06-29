@@ -12,7 +12,7 @@ type
     Telefone: String[11];
     Email: String;
     CPF: String[11];
-    LivrosEmprestados: THistorico;
+    LivrosEmprestados:THistorico;
     Historico: THistorico;
   End;
 
