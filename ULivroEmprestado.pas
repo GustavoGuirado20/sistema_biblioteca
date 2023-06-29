@@ -24,6 +24,7 @@ type
   procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
   procedure MostrarHistorico(aHistorico: THistorico);
+  procedure ReduzirHistorico(var aHistorico: THistorico);
 
 implementation
 
@@ -34,6 +35,11 @@ quando o usuário incluir novo usuário}
 procedure aumentarHistorico(var aHistorico: THistorico);
 begin
   setLength(aHistorico, Length(aHistorico) + 1);
+end;
+
+procedure ReduzirHistorico(var aHistorico: THistorico);
+begin
+  setLength(aHistorico, Length(aHistorico) - 1);
 end;
 
 function FormatarData(aData: TDate): String;
@@ -82,6 +88,31 @@ begin
   aEmprestado.DataDevolucao  := 0;
   aEmprestado.Multa          := 0;
 end;
+
+procedure ReorganizarHistorico(var aHistorico: THistorico);
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aHistorico)) do
+  begin
+    if (aHistorico[I].DataEmprestimo = 0) and (aHistorico[I].DataDevolucao = 0)
+      and (Length(aHistorico) > 1) then
+    begin
+      aHistorico[I] :=  aHistorico[I + 1];
+      LimparLivroEmprestado(aHistorico[I + 1]);
+    end;
+  end;
+end;
+
+procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
+  aLivroEmprestado: TLivroEmprestado; const aLivroEmprestadoIndex: Integer);
+begin
+  AumentarHistorico(aHistorico);
+  aHistorico[pred(Length(aHistorico))]               := aLivroEmprestado;
+  aHistorico[pred(Length(aHistorico))].DataDevolucao := Date;
+  LimparLivroEmprestado(aLivroEmprestado);
+end;
+
 
 {Function que retorna um Record TLivroEmprestado}
 function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
@@ -171,5 +202,7 @@ begin
     PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
   aBiblioteca[xIndice].Disponivel := false;
 end;
+
+//procedure DevolverLivro;
 
 end.
