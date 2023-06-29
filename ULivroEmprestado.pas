@@ -43,14 +43,20 @@ end;
 
 function CalcularMulta(aDataDevolucao: TDate): double;
 begin
-  Result := 2 * (DaysBetween(aDataDevolucao, Date)).toDouble;
-  if Result < 0 then
-    Result := 0;
+  if Date < aDataDevolucao then
+    Result := 0
+  else
+    Result := 2 * (DaysBetween(Date, aDataDevolucao)).toDouble;
+end;
+
+procedure AtualizarMulta(aLivroEmprestado: TLivroEmprestado);
+begin
+  aLivroEmprestado.Multa := CalcularMulta(aLivroEmprestado.DataDevolucao);
 end;
 
 function FormatarMulta(aMulta: double): String;
 begin
-  Result := FormatFloat('R$ 0,00', aMulta);
+  Result := FormatFloat('R$ 0.00', aMulta);
 end;
 
 function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
@@ -99,7 +105,8 @@ begin
     MostrarLivro(aEmprestado.Livro);
     writeln('Data de empréstimo: ' + DateToStr(aEmprestado.DataEmprestimo));
     writeln('Data de devolução: ' + DateToStr(aEmprestado.DataDevolucao));
-    writeln('Multa: ' + FormatarMulta(aEmprestado.Multa));
+    if CalcularMulta(aEmprestado.DataDevolucao) > 0 then
+      writeln('Multa: ' + FormatarMulta(aEmprestado.Multa));
   end;
   {else
     writeln('Nenhum livro emprestado no momento');}
