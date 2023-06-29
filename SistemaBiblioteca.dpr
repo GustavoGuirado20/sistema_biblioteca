@@ -9,7 +9,8 @@ uses
   UUsuario in 'UUsuario.pas',
   ULivro in 'ULivro.pas',
   UOperacoes in 'UOperacoes.pas',
-  ULivroEmprestado in 'ULivroEmprestado.pas';
+  ULivroEmprestado in 'ULivroEmprestado.pas',
+  UController in 'UController.pas';
 
 //Procedure para testar outros procedures e functions
 procedure ControladorTeste;
