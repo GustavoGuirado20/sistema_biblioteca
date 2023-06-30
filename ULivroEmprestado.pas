@@ -20,6 +20,8 @@ type
   function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
   function FormatarData(aData: TDate): String;
   function EscolherLivroEmprestado(aLivrosEmprestados: THistorico): Byte;
+  function CalcularMultasAbertas(aHistorico: THistorico): double;
+  function CalcularMultasFechadas(aHistorico: THistorico): double;
   procedure MostrarOpcoesLivroEmprestado(aLivrosEmprestados: THistorico);
   procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure AumentarHistorico(var aHistorico: THistorico);
@@ -64,6 +66,32 @@ begin
     Result := 0
   else
     Result := 2 * (DaysBetween(Date, aDataDevolucao)).toDouble;
+end;
+
+function CalcularMultasFechadas(aHistorico: THistorico): double;
+var
+  I: Integer;
+  xTotalMulta: double;
+begin
+  xTotalMulta := 0;
+  for I := 0 to pred(Length(aHistorico)) do
+  begin
+    xTotalMulta := xTotalMulta + aHistorico[I].Multa;
+  end;
+  Result := xTotalMulta;
+end;
+
+function CalcularMultasAbertas(aHistorico: THistorico): double;
+var
+  I: Integer;
+  xTotalMulta: double;
+begin
+  xTotalMulta := 0;
+  for I := 0 to pred(Length(aHistorico)) do
+  begin
+    xTotalMulta := xTotalMulta + CalcularMulta(aHistorico[I].DataDevolucao);
+  end;
+  Result := xTotalMulta;
 end;
 
 procedure AtualizarMulta(aLivroEmprestado: TLivroEmprestado);
