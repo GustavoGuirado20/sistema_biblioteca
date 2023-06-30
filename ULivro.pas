@@ -26,6 +26,7 @@ type
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(const aLivro: TLivro);
   procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
+  procedure AlterarDisponibilidade(var aLivro: TLivro);
   function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
   procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 
@@ -85,6 +86,10 @@ begin
   end;
 end;
 
+procedure AlterarDisponibilidade(var aLivro: TLivro);
+begin
+  aLivro.Disponivel := not aLivro.Disponivel;
+end;
 {Procedure para aumentar o número de elementos da Array TBiblioteca em +1
 quando o usuário incluir novo livro}
 procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);

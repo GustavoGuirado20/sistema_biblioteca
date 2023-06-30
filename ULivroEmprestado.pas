@@ -15,20 +15,26 @@ type
   THistorico = Array of TLivroEmprestado;
 
   function FormatarMulta(aMulta: double): String;
-
   function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
                                     aDataDevolucao: TDate): TLivroEmprestado;
   function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
+  function FormatarData(aData: TDate): String;
+  function EscolherLivroEmprestado(aLivrosEmprestados: THistorico): Byte;
+  procedure MostrarOpcoesLivroEmprestado(aLivrosEmprestados: THistorico);
+  procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure AumentarHistorico(var aHistorico: THistorico);
   procedure LimparLivroEmprestado(aEmprestado: TLivroEmprestado);
-  procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
   procedure MostrarHistorico(aHistorico: THistorico);
   procedure ReduzirHistorico(var aHistorico: THistorico);
+  procedure DevolverLivro(var aLivrosEmprestados, aHistorico: THistorico;
+    var aBiblioteca: TBiblioteca);
+  procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
+  aLivroEmprestado: TLivroEmprestado);
 
 implementation
 
-uses SysUtils, DateUtils;
+uses SysUtils, DateUtils, UUsuario;
 
 {Procedure para aumentar o número de elementos da Array TBiblioteca em +1
 quando o usuário incluir novo usuário}
@@ -47,6 +53,11 @@ begin
   Result := FormatDateTime('dd/mm/yyyy', aData);
 end;
 
+procedure PagarMulta(aEmprestado: TLivroEmprestado);
+begin
+  aEmprestado.Multa := 0;
+end;
+
 function CalcularMulta(aDataDevolucao: TDate): double;
 begin
   if Date < aDataDevolucao then
@@ -57,7 +68,7 @@ end;
 
 procedure AtualizarMulta(aLivroEmprestado: TLivroEmprestado);
 begin
-  aLivroEmprestado.Multa := aLivroEmprestado.Multa + CalcularMulta(aLivroEmprestado.DataDevolucao);
+  aLivroEmprestado.Multa := CalcularMulta(aLivroEmprestado.DataDevolucao);
 end;
 
 function FormatarMulta(aMulta: double): String;
@@ -69,6 +80,7 @@ function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate
 begin
   Result := IncDay(aDataEmprestimo, aDias);
 end;
+
 
 {Procedure para limpar todas as informações de livro emprestado de um usuário,
 usada tanto para fazer a devolução de um livro como para registrar um usuário
@@ -89,6 +101,22 @@ begin
   aEmprestado.Multa          := 0;
 end;
 
+procedure MostrarOpcoesLivroEmprestado(aLivrosEmprestados: THistorico);
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aLivrosEmprestados)) do
+  begin
+    writeln('Opção' + (I + 1).ToString);
+    writeln(aLivrosEmprestados[I].Livro.Titulo);
+    writeln('Data de empréstimo: ' + FormatarData(aLivrosEmprestados[I]
+      .DataEmprestimo));
+    writeln('Data de devolução: ' + FormatarData(aLivrosEmprestados[I]
+      .DataDevolucao));
+    writeln;
+  end;
+end;
+
 procedure ReorganizarHistorico(var aHistorico: THistorico);
 var
   I: Integer;
@@ -105,14 +133,13 @@ begin
 end;
 
 procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
-  aLivroEmprestado: TLivroEmprestado; const aLivroEmprestadoIndex: Integer);
+  aLivroEmprestado: TLivroEmprestado);
 begin
   AumentarHistorico(aHistorico);
   aHistorico[pred(Length(aHistorico))]               := aLivroEmprestado;
   aHistorico[pred(Length(aHistorico))].DataDevolucao := Date;
   LimparLivroEmprestado(aLivroEmprestado);
 end;
-
 
 {Function que retorna um Record TLivroEmprestado}
 function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
@@ -200,9 +227,61 @@ begin
   AumentarHistorico(aLivrosEmprestados);
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
     PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
-  aBiblioteca[xIndice].Disponivel := false;
+  AlterarDisponibilidade(aBiblioteca[xIndice]);
 end;
 
-//procedure DevolverLivro;
+function EscolherLivroEmprestado(aLivrosEmprestados: THistorico): Byte;
+var
+  I: Integer;
+  xOpc: Byte;
+begin
+  MostrarOpcoesLivroEmprestado(aLivrosEmprestados);
+  write('Opção: ');
+  readln(xOpc);
+  while (xOpc < 1) or (xOpc > Length(aLivrosEmprestados)) do
+  begin
+    writeln('Opção inválida. Selecione uma das opções:');
+    MostrarOpcoesLivroEmprestado(aLivrosEmprestados);
+    write('Opção: ');
+    readln(xOpc);
+  end;
+  Result := xOpc  + 1;
+end;
+
+procedure ChecarMultaLivro(var aEmprestado: TLivroEmprestado);
+var
+  xEscolha: char;
+  xLivro: TLivro;
+begin
+  writeln('Data prevista de devolução: ' + formatarData(aEmprestado.DataDevolucao));
+  writeln('Data atual: ' + formatarData(Date));
+  AtualizarMulta(aEmprestado);
+  if aEmprestado.Multa > 0 then
+  begin
+    writeln('O atraso gerou uma multa de ' + FormatarMulta(aEmprestado.Multa) + '.');
+    write('Deseja pagar a multa agora? (S/N)');
+    readln(xEscolha);
+    if upCase(xEscolha) = 'S' then
+      PagarMulta(aEmprestado)
+  end;
+end;
+
+procedure DevolverLivro(var aLivrosEmprestados, aHistorico: THistorico; var aBiblioteca: TBiblioteca);
+var
+  xOpc: Byte;
+  xIndice: Integer;
+begin
+  writeln('Selecione uma opção');
+  xOpc := EscolherLivroEmprestado(aLivrosEmprestados);
+  ChecarMultaLivro(aLivrosEmprestados[xOpc]);
+  RegistrarDevolucaoLivro(aHistorico, aLivrosEmprestados[xOpc]);
+  LimparLivroEmprestado(aLivrosEmprestados[xOpc]);
+  ReduzirHistorico(aLivrosEmprestados);
+  BuscarLivroPorCod(xIndice, aLivrosEmprestados[xOpc].Livro,
+    aBiblioteca,aLivrosEmprestados[xOpc].Livro.Cod);
+  AlterarDisponibilidade(aBiblioteca[xIndice]);
+  writeln('Livro ' + aLivrosEmprestados[xOpc].Livro.Titulo +
+    ' devolvido com sucesso');
+end;
 
 end.

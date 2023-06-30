@@ -30,7 +30,7 @@ type
     : TUsuariosCadastrados);
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
   procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario;const aBloquear: boolean);
-  function SelecionarLivroEmprestado(const aOPC: byte; const aUsuario: TUsuario): TLivroEmprestado;
+
 implementation
 
 uses SysUtils;
@@ -171,33 +171,6 @@ begin
   for I := 0 to pred(Length(aUsuarios)) do
   begin
     MostrarUsuario(aUsuarios[I]);
-  end;
-end;
-
-procedure MostrarOpcoesLivroEmprestado(aUsuario: TUsuario);
-var
-  I: Integer;
-begin
-  for I := 0 to pred(Length(aUsuario.LivrosEmprestados)) do
-  begin
-    writeln('Opção' + (I + 1).ToString);
-    writeln(aUsuario.LivrosEmprestados[I].Livro.Titulo);
-    writeln('Data de empréstimo: ' + FormatarData(aUsuario.LivrosEmprestados[I]
-      .DataEmprestimo));
-    writeln('Data de devolução: ' + FormatarData(aUsuario.LivrosEmprestados[I]
-      .DataDevolucao));
-    writeln;
-  end;
-end;
-
-function SelecionarLivroEmprestado(const aOPC: byte; const aUsuario: TUsuario): TLivroEmprestado;
-var
-  I: Integer;
-begin
-  for I := 0 to pred(Length(aUsuario.LivrosEmprestados)) do
-  begin
-    if aOPC = I + 1 then
-      Result := aUsuario.LivrosEmprestados[I];
   end;
 end;
 
