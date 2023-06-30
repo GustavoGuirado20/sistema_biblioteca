@@ -11,6 +11,12 @@ implementation
 uses
   SysUtils;
 
+procedure ControllerUsuario(var aBiblioteca: TBiblioteca; var aUsuario: TUsuario);
+begin
+
+end;
+
+
 function MenuPrincipal: byte;
 var
   xOPC: byte;
@@ -24,7 +30,6 @@ begin
   Result := xOPC;
   writeln;
 end;
-
 
 procedure ControllerPrincipal;
 var
@@ -41,7 +46,7 @@ begin
     case opc of
       1:
       begin
-
+        ControllerUsuario;
       end;
     end;
   end;

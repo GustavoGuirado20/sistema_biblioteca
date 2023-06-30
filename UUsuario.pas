@@ -26,8 +26,7 @@ type
   function PreencherUsuario(const aNome, aEmail, aCPF, aTelefone: String;
     const aCod: Integer): TUsuario;
   function NumeroAleatorio: String;
-  procedure PreencherUsuariosCadastradosIniciais(var aUsuarios
-    : TUsuariosCadastrados);
+  function UsuariosCadastradosIniciais: TUsuariosCadastrados;
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
   procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario;const aBloquear: boolean);
 
@@ -87,8 +86,7 @@ end;
 
 { Procedure para popular a Array de usuários automaticamente para não termos que
   preenche-la toda hora }
-procedure PreencherUsuariosCadastradosIniciais(var aUsuarios
-  : TUsuariosCadastrados);
+function UsuariosCadastradosIniciais: TUsuariosCadastrados;
 const
   NOME_EMAIL: array [0 .. 14, 0 .. 1] of String = (('Emilia Azevedo Silva',
     'emiliasilva72@hmail.com'), ('Kauê Goncalves Pinto',
@@ -107,13 +105,16 @@ const
     ('Julio Fernandes', 'juju_fefe@ig.com.br'));
 var
   I: Integer;
+  xUsuarios: TUsuariosCadastrados;
 begin
-  setLength(aUsuarios, 15);
+  setLength(xUsuarios, 15);
   for I := 0 to 14 do
   begin
-    aUsuarios[I] := PreencherUsuario(NOME_EMAIL[I][0], NOME_EMAIL[I][1],
+    xUsuarios[I] := PreencherUsuario(NOME_EMAIL[I][0], NOME_EMAIL[I][1],
       NumeroAleatorio, NumeroAleatorio, (I + 1));
   end;
+
+  Result := xUsuarios;
 end;
 
 { Function para retornar o telefone de TUsuario na formatação (##) #####-####
