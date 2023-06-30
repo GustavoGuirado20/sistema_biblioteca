@@ -18,7 +18,7 @@ type
                           const aDisponivel: Boolean): TLivro;
   function MostrarStatus(const aDisponivel: Boolean): String;
 
-  procedure PreencherBibliotecaInicial(var aBiblioteca: TBiblioteca);
+  function BibliotecaInicial: TBiblioteca;
   function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
                                                 aDisponivel: Boolean): Integer;
   procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
@@ -26,6 +26,7 @@ type
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(const aLivro: TLivro);
   procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
+  procedure AlterarDisponibilidade(var aLivro: TLivro);
   function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
   procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 
@@ -49,7 +50,7 @@ end;
 
 {Procedure para preencher a biblioteca quando o programa é iniciado com livros
 pre-gerados}
-procedure PreencherBibliotecaInicial(var aBiblioteca: TBiblioteca);
+function BibliotecaInicial: TBiblioteca;
 const
   LIVROS: Array[0..19,0..3] of String =
     (
@@ -76,15 +77,22 @@ const
     );
 var
   I: Integer;
+  xBiblioteca: TBiblioteca;
 begin
-  SetLength(aBiblioteca, 20);
-  for I := 0 to (Length(aBiblioteca) - 1) do
+  SetLength(xBiblioteca, 20);
+  for I := 0 to (Length(xBiblioteca) - 1) do
   begin
-    aBiblioteca[I] := PreencherLivro(I + 1, LIVROS[I][0], LIVROS[I][1],
+    xBiblioteca[I] := PreencherLivro(I + 1, LIVROS[I][0], LIVROS[I][1],
                       LIVROS[I][2], LIVROS[I][3], true);
   end;
+
+  Result := xBiblioteca;
 end;
 
+procedure AlterarDisponibilidade(var aLivro: TLivro);
+begin
+  aLivro.Disponivel := not aLivro.Disponivel;
+end;
 {Procedure para aumentar o número de elementos da Array TBiblioteca em +1
 quando o usuário incluir novo livro}
 procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
