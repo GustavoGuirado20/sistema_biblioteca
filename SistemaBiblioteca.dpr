@@ -18,11 +18,14 @@ var
   xBiblioteca: TBiblioteca;
   xUsuariosCadastrados: TUsuariosCadastrados;
 begin
-  preencherBibliotecaInicial(xBiblioteca);
-  PreencherUsuariosCadastradosIniciais(xUsuariosCadastrados);
+  xBiblioteca := BibliotecaInicial;
+  xUsuariosCadastrados := UsuariosCadastradosIniciais;
   //MostrarUsuariosCastrados(xUsuariosCadastraddos);
   EmprestarLivro(xUsuariosCadastrados[0].LivrosEmprestados, xBiblioteca);
   MostrarUsuario(xUsuariosCadastrados[0]);
+  writeln('LIVRO EMPRESTADO AQUI');
+  MostrarLivro(xUsuariosCadastrados[0].LivrosEmprestados[0].Livro);
+  MostrarLivro(xBiblioteca[2]);
   //MostrarCatalogo(xBiblioteca);
   //writeln(Length(xBiblioteca));
   //EscreverPorcentagemLivros(xBiblioteca, false);

@@ -212,4 +212,17 @@ begin
   Result := false;
 end;
 
+function BuscarLivroPorNome(var resultado:boolean; Nome:string; aBiblioteca:TBiblioteca): integer;
+var
+  cont,i:integer;
+begin
+  resultado := false;
+  for i := 0 to pred(length(aBiblioteca)) do
+    if (uppercase(aBiblioteca[i].Titulo) = uppercase(nome)) then
+    begin
+    result := i;
+    resultado := true;
+    end;
+
+end;
 end.
