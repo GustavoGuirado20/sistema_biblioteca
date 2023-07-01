@@ -234,7 +234,7 @@ begin
   Repeat
     write('Insira o código do livro a ser emprestado: ');
     readln(xCod);
-    while (not BuscarLivroPorCod(xIndice, xLivro, aBiblioteca, xCod)) do
+    while (BuscarLivroPorCod(xIndice, xLivro, aBiblioteca, xCod) = false) do
     begin
       writeln('Livro de código ' + xCod.ToString + ' não localizado. Insira um ' +
       'número correto ou 0 para sair.');
