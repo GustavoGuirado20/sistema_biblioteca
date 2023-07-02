@@ -33,6 +33,7 @@ type
     var aBiblioteca: TBiblioteca);
   procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
   aLivroEmprestado: TLivroEmprestado);
+  function CalcularQuantidades(aBiblioteca: TBiblioteca; var emprestados:integer): integer;
 
 implementation
 
@@ -312,4 +313,20 @@ begin
     ' devolvido com sucesso');
 end;
 
+//Clacular quantidade de livros emprestados
+function CalcularQuantidades(aBiblioteca: TBiblioteca; var emprestados:integer): integer;
+var
+  i,cont:integer;
+begin
+  cont :=0;
+  emprestados := 0;
+  for i := 0 to pred(length(aBiblioteca)) do
+    if aBiblioteca[i].Disponivel = true then
+    cont := cont + 1
+    else
+    emprestados := emprestados + 1;
+
+  result := cont;
+
+end;
 end.
