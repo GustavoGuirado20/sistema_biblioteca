@@ -4,8 +4,9 @@ unit UController;
 interface
 
 uses
-  UUsuario, ULivroEmprestado, ULivro;
+  UUsuario, ULivroEmprestado, ULivro, UOperacoes;
 
+  procedure MenuProcedure;
 implementation
 
 uses
@@ -77,8 +78,6 @@ begin
   Writeln('5 - Pocentagem de Livros Emprestados x Disponíveis');
   Writeln('6 - Mostrar Livros Disponíveis ou Emprestados');
   Writeln('7 - Buscar Por Código');
-  Writeln('8 - Emprestar Livro');
-  Writeln('9 - Renovar Prazo de Emprestimo');
   Writeln('0 - Sair');
 
   readln(opc);
@@ -104,8 +103,10 @@ var
   opc:byte;
   xBiblioteca:TBiblioteca;
   xLivro:TLivro;
+  xLivroEmprestado:TLivroEmprestado;
   nome:string;
   resultado:boolean;
+  falso,respostas:integer;
 begin
 
   while (MenuPrincipal <> 0) do
@@ -128,13 +129,28 @@ begin
             MostrarLivro(xlivro);
           end;
 
-        3:
+        3:MostrarCatalogo(xBiblioteca);
 
+        4:Writeln('A Biblioteca possui ' + CalcularQuantidades(xBiblioteca,falso).Tostring + ' livros disponíveis e ' + falso.tostring + ' livros emprestados');
+
+        5:Writeln((CalcularQuantidades(xBiblioteca,falso) * 100 / pred(length(xBiblioteca))).ToString	 + ' dos estão disponíveis e ' + (falso * 100 / pred(length(xBiblioteca))).ToString	 + ' estão emprestados');
+
+        6:begin
+            Writeln('Digite 1 para livros emprestados e 2 para livors diponíveis');
+            readln(respostas);
+            if falso = 1 then
+              Writeln('A biblioteca possui ' + (falso * 100 / pred(length(xBiblioteca))).ToString + '% de Livros emprestados')
+            else
+              Writeln('A biblioteca possui ' + (CalcularQuantidades(xBiblioteca,falso) * 100 / pred(length(xBiblioteca))).ToString	 + '% de Livros disponíveis');
+          end;
+
+        7:begin
+            BuscarLivroPorCod(falso,xLivro,xBiblioteca,respostas);
+            MostrarLivro(xlivro);
+           end;
         end;
-     end
     end;
-
-
   end;
+ end;
 end;
 END.

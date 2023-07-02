@@ -29,7 +29,7 @@ type
   procedure AlterarDisponibilidade(var aLivro: TLivro);
   function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
   procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
-
+  function BuscarLivroPorNome(var aLivro:TLivro; Nome:string; aBiblioteca:TBiblioteca): boolean;
 implementation
 
 uses SysUtils, UOperacoes;
@@ -212,16 +212,17 @@ begin
   Result := false;
 end;
 
-function BuscarLivroPorNome(var resultado:boolean; Nome:string; aBiblioteca:TBiblioteca): integer;
+function BuscarLivroPorNome(var aLivro:TLivro; Nome:string; aBiblioteca:TBiblioteca): boolean;
 var
   cont,i:integer;
 begin
-  resultado := false;
+  result := false;
   for i := 0 to pred(length(aBiblioteca)) do
     if (uppercase(aBiblioteca[i].Titulo) = uppercase(nome)) then
     begin
-    result := i;
-    resultado := true;
+    result:= true;
+    alivro := abiblioteca[i];
+
     end;
 
 end;

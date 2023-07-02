@@ -21,14 +21,14 @@ begin
   xBiblioteca := BibliotecaInicial;
   xUsuariosCadastrados := UsuariosCadastradosIniciais;
   //MostrarUsuariosCastrados(xUsuariosCadastraddos);
-  EmprestarLivro(xUsuariosCadastrados[0].LivrosEmprestados, xBiblioteca);
+{  EmprestarLivro(xUsuariosCadastrados[0].LivrosEmprestados, xBiblioteca);
   MostrarUsuario(xUsuariosCadastrados[0]);
   writeln('LIVRO EMPRESTADO AQUI');
   MostrarLivro(xUsuariosCadastrados[0].LivrosEmprestados[0].Livro);
   MostrarLivro(xBiblioteca[2]);
   //MostrarCatalogo(xBiblioteca);
   //writeln(Length(xBiblioteca));
-  //EscreverPorcentagemLivros(xBiblioteca, false);
+  //EscreverPorcentagemLivros(xBiblioteca, false);   }
 end;
 
 Function Menu: byte;
@@ -58,8 +58,9 @@ end;
 
 begin
   try
-    { TODO -oUser -cConsole Main : Insert code here }
+   {  TODO -oUser -cConsole Main : Insert code here }
     ControladorTeste;
+    MenuProcedure;
     readln;
   except
     on E: Exception do
@@ -68,4 +69,5 @@ begin
       readln;
     end;
   end;
+ MenuProcedure;
 end.
