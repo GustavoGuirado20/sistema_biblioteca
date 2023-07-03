@@ -84,14 +84,31 @@ begin
   result := opc;
 end;
 
-function MenuCliente:byte;
+function MenuCliente1:byte;
 var
   opc:byte;
 begin
   Writeln('1 - Cadastrar Usuário');
-  Writeln('2 - Pesquisar Usuário');
-  Writeln('3 - Mostrar Todos os Usuários');
-  Writeln('4 - Bloquear Usuário');
+  Writeln('2 - Mostrar Todos os Usuários');
+  Writeln('3 - Menu Usuário');
+  Writeln('0 Sair');
+
+  readln(opc);
+  result := opc;
+end;
+
+function MenuCliente2:byte;
+var
+  opc:byte;
+begin
+  Writeln('1 - Dados Usuário');
+  Writeln('2 - Bloquar Usuário');
+  Writeln('3 - Desbloquear Usuário');
+  Writeln('4 - Livors Emprestados');
+  Writeln('5 - Renovar Prazo Livro');
+  Writeln('6 - Devolver Livro');
+  Writeln('7 - Consultar Multas');
+  Writeln('8 - Pagar Multas');
   Writeln('0 Sair');
 
   readln(opc);
@@ -104,9 +121,11 @@ var
   xBiblioteca:TBiblioteca;
   xLivro:TLivro;
   xLivroEmprestado:TLivroEmprestado;
+  xusuarioscadastrados:TUsuariosCadastrados;
+  xusuarios:Tusuario;
   nome:string;
   resultado:boolean;
-  falso,respostas:integer;
+  falso,i,respostas:integer;
 begin
 
   while (MenuPrincipal <> 0) do
@@ -149,6 +168,33 @@ begin
             MostrarLivro(xlivro);
            end;
         end;
+      end;
+     2:begin
+        while (MenuCliente1 <> 0) do
+          case (MenuCliente1) of
+        //  1:
+
+          2:MostrarUsuariosCastrados(xUsuarioscadastrados);
+
+          3:begin
+             Writeln('Digite o Código de um Cliente');
+             readln(respostas);
+             while(MenuCliente2 <> 0) do
+              case (MenuCliente2) of
+
+              1:begin
+                for I := 0 to pred(length(xBiblioteca)) do
+                  if xusuarioscadastrados[i].Cod = respostas then
+                  xusuarios := xusuarioscadastrados[i];
+                  break;
+                MostrarUsuario(xusuarios);
+
+
+              end;
+              end;
+
+            end;
+          end;
     end;
   end;
  end;
