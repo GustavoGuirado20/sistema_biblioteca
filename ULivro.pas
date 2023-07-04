@@ -21,15 +21,21 @@ type
   function BibliotecaInicial: TBiblioteca;
   function ContarLivrosEmprestadosOuDisponiveis(aBiblioteca: TBiblioteca;
                                                 aDisponivel: Boolean): Integer;
-  procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
+  {procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca);}
   procedure IncluirNovoLivro(var aBiblioteca: TBiblioteca);
   procedure AumentarBiblioteca(var aBiblioteca: TBiblioteca);
   procedure MostrarLivro(const aLivro: TLivro);
   procedure MostrarCatalogo(const aBiblioteca: TBiblioteca);
   procedure AlterarDisponibilidade(var aLivro: TLivro);
-  function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
-  procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
+  function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro;
+    const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
+  {procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca;
+    const aDisponivel: Boolean);}
   function BuscarLivroPorNome(var aLivro:TLivro; Nome:string; aBiblioteca:TBiblioteca): boolean;
+  procedure EscreverResultadoPesquisaPorNome(const aBiblioteca: TBiblioteca);
+  function CalcularQuantidadeEmprestados(aBiblioteca: TBiblioteca): Integer;
+  procedure EscreverRelacaoLivrosDispEmp(aBiblioteca: TBiblioteca);
+
 implementation
 
 uses SysUtils, UOperacoes;
@@ -123,7 +129,7 @@ begin
 end;
 
 {Procedure para escrever na tela todos os livros emprestados ou livres.}
-procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
+{procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 var
   xTexto: String;
   I, Contador: Integer;
@@ -134,7 +140,7 @@ begin
     if aBiblioteca[I].Disponivel = aDisponivel then
       MostrarLivro(aBiblioteca[I]);
   end;
-end;
+end;  }
 
 {Procedure que permite ao usuário do sistema cadastrar um novo livro e o insere
 no último elemento da array aBiblioteca}
@@ -184,14 +190,14 @@ end;
 
 {Procedure que mostra na tela o percentual de livros disponíveis  ou emprestados
 de acordo com o parâmetro aDisponivel}
-procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
+{procedure MostrarPorcentagemLivros(const aBiblioteca: TBiblioteca);
 begin
   writeln(Format('Total de livros: %d', [Length(aBiblioteca)]));
-  writeln(Format('Total de livros com status %s: %d', [MostrarStatus(aDisponivel), ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel)]));
-  writeln(Format('Porcentagem de livros com status %s: %s%%', [MostrarStatus(aDisponivel),
+  writeln(Format('Total de livros com status %s: %d', [MostrarStatus(true), ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel)]));
+  writeln(Format('Porcentagem de livros com status %s: %s%%', [MostrarStatus(true),
                   FormatFloat('#.##', ObterPorcentagem(ContarLivrosEmprestadosOuDisponiveis(aBiblioteca, aDisponivel),
                   Length(aBiblioteca)))]));
-end;
+end;}
 
 {Function que retorna um TLivro da array aBiblioteca cujo codigo corresponda ao parâmetro aCod}
 function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
@@ -224,6 +230,57 @@ begin
     alivro := abiblioteca[i];
 
     end;
-
 end;
+
+procedure EscreverResultadoPesquisaPorNome(const aBiblioteca: TBiblioteca);
+var
+  xNome: String;
+  xLivro: TLivro;
+  xNovamente: char;
+begin
+  Repeat
+    Writeln('Escreva o nome do livro desejado');
+    readln(xNome);
+    if not BuscarLivroPorNome(xLivro, xNome, aBiblioteca) then
+      writeln('Não existe um livro catalogado com o nome ' + xNome)
+    else
+      MostrarLivro(xLivro);
+    write('Deseja efetuar uma nova busca? (S/N)');
+    readln(xNovamente);
+  Until xNovamente <> UpCase('S');
+end;
+
+//Clacular quantidade de livros emprestados
+function CalcularQuantidadeEmprestados(aBiblioteca: TBiblioteca): Integer;
+var
+  I, Cont: Integer;
+begin
+  cont := 0;
+  for i := 0 to pred(length(aBiblioteca)) do
+  begin
+    if aBiblioteca[i].Disponivel = false then
+    begin
+      cont := cont + 1;
+    end;
+  end;
+  result := cont;
+end;
+
+procedure EscreverRelacaoLivrosDispEmp(aBiblioteca: TBiblioteca);
+var
+  xQtdLivrosDisponiveis: Integer;
+begin
+  xQtdLivrosDisponiveis := Length(aBiblioteca) - CalcularQuantidadeEmprestados(aBiblioteca);
+  writeln('Total de livros: ' + Length(aBiblioteca).ToString);
+  writeln('Livros disponíveis: ' + xQtdLivrosDisponiveis.ToString);
+  writeln('Porcentagem de livros disponíveis: ' + FormatFloat('#.##',
+    ObterPorcentagem(Length(aBiblioteca), xQtdLivrosDisponiveis)));
+  writeln('Livros emprestados: ' +
+    CalcularQuantidadeEmprestados(aBiblioteca).ToString);
+  writeln('Porcentagem de livros disponíveis: ' + FormatFloat('#.##',
+    ObterPorcentagem(Length(aBiblioteca),
+    CalcularQuantidadeEmprestados(aBiblioteca))));
+end;
+
+
 end.
