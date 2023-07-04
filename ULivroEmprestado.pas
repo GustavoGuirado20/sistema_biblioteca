@@ -248,7 +248,7 @@ var
   xLivro: TLivro;
   xConfirma: char;
 begin
-  if Length(aLivrosEmprestados) > 5 then
+  if Length(aLivrosEmprestados) = 5 then
   begin
     writeln('O usuário já possui 5 livros emprestados');
     exit;
