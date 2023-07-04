@@ -2,12 +2,17 @@ unit UOperacoes;
 
 interface
 
-  function ObterPorcentagem(aValorParcial, aTotal: Integer): Double;
+  function ObterPorcentagem(aTotal, aValorParcial: Integer): Double;
 
 implementation
 
-function ObterPorcentagem(aValorParcial, aTotal: Integer): Double;
+function ObterPorcentagem(aTotal, aValorParcial: Integer): Double;
 begin
+  if aTotal = 0 then
+  begin
+    Result := 0;
+    exit;
+  end;
   Result := 100 * aValorParcial / aTotal;
 end;
 

@@ -3,14 +3,13 @@ unit UController;
 
 interface
 
-uses
-  UUsuario, ULivroEmprestado, ULivro, UOperacoes;
+  procedure ControllerPrincipal;
 
-  procedure MenuProcedure;
 implementation
 
 uses
-  SysUtils;
+  UUsuario, ULivroEmprestado, ULivro, UOperacoes, SysUtils;
+
 
 {procedure ControllerUsuario(var aBiblioteca: TBiblioteca; var aUsuario: TUsuario);
 begin
@@ -23,8 +22,8 @@ var
   xOPC: byte;
 begin
   writeln('Menu principal');
-  writeln('Selecione uma opÁ„o abaixo:');
-  writeln('1 - Usu·rios');
+  writeln('Selecione uma op√ß√£o abaixo:');
+  writeln('1 - Usu√°rios');
   writeln('2 - Acervo');
   writeln('0 - Sair');
   readln(xOpc);
@@ -73,144 +72,132 @@ var
 begin
   Writeln('1 - Cadastrar Livro');
   Writeln('2 - Pesquisar Livro');
-  Writeln('3 - Mostrar Cat·logo');
-  Writeln('4 - Quantidade de Livros Emprestados x DisponÌveis');
-  Writeln('5 - Pocentagem de Livros Emprestados x DisponÌveis');
-  Writeln('6 - Mostrar Livros DisponÌveis ou Emprestados');
-  Writeln('7 - Buscar Por CÛdigo');
+  Writeln('3 - Mostrar Cat√°logo');
+  Writeln('4 - Informa√ß√µes de Livros Emprestados x Dispon√≠veis');
+  Writeln('5 - Mostrar Livros Dispon√≠veis');
+  Writeln('6 - Mostrar Livros Emprestados');
   Writeln('0 - Sair');
 
   readln(opc);
   result := opc;
 end;
 
-function MenuCliente1:byte;
+function MenuCliente:byte;
 var
   opc:byte;
 begin
-  Writeln('1 - Cadastrar Usu·rio');
-  Writeln('2 - Mostrar Todos os Usu·rios');
-  Writeln('3 - Menu Usu·rio');
-  Writeln('0 Sair');
+  Writeln('1 - Cadastrar Usu√°rio');
+  Writeln('2 - Pesquisar Usu√°rio');
+  Writeln('3 - Mostrar Todos os Usu√°rios');
+  Writeln('4 - Bloquear ou Desbloquear Usu√°rio');
+  Writeln('5 - Empr√©stimos, devolu√ß√µes e multas');
+  Writeln('0 - Sair');
 
   readln(opc);
   result := opc;
 end;
 
-function MenuCliente2:byte;
+function MenuOutros: Byte;
 var
-  opc:byte;
+  opc: byte;
 begin
-  Writeln('1 - Dados Usu·rio');
-  Writeln('2 - Bloquar Usu·rio');
-  Writeln('3 - Livors Emprestados');
-  Writeln('4 - Renovar Prazo Livro');
-  Writeln('5 - Devolver Livro');
-  Writeln('6 - Consultar Multas');
-  Writeln('7 - Pagar Multas');
-  Writeln('0 Sair');
+  Writeln('1 - Emprestar um Livro');
+  Writeln('2 - Devolver um Livro');
+  Writeln('3 - Renovar um Empr√©stimo');
+  Writeln('4 - Consultar e Pagar Multas');
+  Writeln('0 - Sair');
 
   readln(opc);
   result := opc;
 end;
 
-procedure MenuProcedure;
+procedure ControllerOutros(var aBiblioteca: TBiblioteca;
+  var aUsuario: TUsuariosCadastrados);
 var
-  opc:byte;
-  xBiblioteca:TBiblioteca;
-  xLivro:TLivro;
-  xLivroEmprestado:TLivroEmprestado;
-  xusuarioscadastrados:TUsuariosCadastrados;
-  xusuarios:Tusuario;
-  xhistorico:Thistorico;
-  nome:string;
-  resultado:boolean;
-  falso,i,respostas,indice:integer;
+  xId: Integer;
+  xOpc: Byte;
 begin
-  xbiblioteca := bibliotecainicial;
-  xusuarioscadastrados := UsuariosCadastradosIniciais;
-  opc := menuprincipal;
-  while (opc <> 0) do
+  writeln('Selecione uma op√ß√£o');
+  xOpc := MenuOutros;
+  while xOpc <> 0 do
   begin
-    case opc of
-    1:
-     begin
-     opc := menulivro;
-      while (MenuLivro <> 0) do
-        case MenuLivro of
-        1:incluirnovolivro(xBiblioteca);
-
-        2:begin
-            repeat
-            Writeln('Escreva o nome do livro desejado');
-            readln(nome);
-            resultado := BuscarLivroPorNome(xLivro, nome,xBiblioteca);
-            if (resultado = false) then
-            writeln('N„o existe um livro catalogado com o nome informado');
-            until resultado = true;
-            MostrarLivro(xlivro);
-          end;
-
-        3:MostrarCatalogo(xBiblioteca);
-
-        4:Writeln('A Biblioteca possui ' + CalcularQuantidades(xBiblioteca,falso).Tostring + ' livros disponÌveis e ' + falso.tostring + ' livros emprestados');
-
-        5:Writeln((CalcularQuantidades(xBiblioteca,falso) * 100 / pred(length(xBiblioteca))).ToString	 + ' dos est„o disponÌveis e ' + (falso * 100 / pred(length(xBiblioteca))).ToString	 + ' est„o emprestados');
-
-        6:begin
-            Writeln('Digite 1 para livros emprestados e 2 para livors diponÌveis');
-            readln(respostas);
-            if falso = 1 then
-              Writeln('A biblioteca possui ' + (falso * 100 / pred(length(xBiblioteca))).ToString + '% de Livros emprestados')
-            else
-              Writeln('A biblioteca possui ' + (CalcularQuantidades(xBiblioteca,falso) * 100 / pred(length(xBiblioteca))).ToString	 + '% de Livros disponÌveis');
-          end;
-
-        7:begin
-            BuscarLivroPorCod(falso,xLivro,xBiblioteca,respostas);
-            MostrarLivro(xlivro);
-           end;
-        end;
-      end;
-     2:begin
-        opc := menucliente1;
-        while (opc <> 0) do
-          case (opc) of
-          1:IncluirNovoUsuario(xusuarioscadastrados);
-
-          2:MostrarUsuariosCastrados(xUsuarioscadastrados);
-
-          3:begin
-             Writeln('Digite o CÛdigo de um Cliente');
-             readln(respostas);
-              repeat
-               repeat
-                 BuscarUsuarioCodigo(indice,respostas,xusuarios,xusuarioscadastrados);
-               until (BuscarUsuarioCodigo(indice,respostas,xusuarios,xusuarioscadastrados) = true);
-              MostrarUsuario(xusuarios);
-              Writeln('VocÍ deseja confirmar esse usu·rios? 1 - Sim 2 - N„o');
-              readln(falso);
-              until (falso = 1);
-                  xhistorico:= xusuarios.Historico;
-
-
-             while(menucliente2 <> 0) do
-              case (menucliente2) of
-
-              1:MostrarUsuario(xusuarios);
-
-              2:alterarBloqueio(xusuarios);
-
-              3:EmprestarLivro(xhistorico,xbiblioteca);
-
-              4:RenovarPrazo(xusuarios.LivrosEmprestados.DataEmprestimo,7);
-          end;
-        end;
+    xId := IdentificarUsuarioPorCod(aUsuario);
+    case xOpc of
+      1: EmprestarLivro(aUsuario[xId].LivrosEmprestados, aBiblioteca);
+      2: DevolverLivro(aUsuario[xId].LivrosEmprestados, aUsuario[xId].Historico,
+        aBiblioteca);
+      3: TelaRenovarPrazo(aUsuario[xId].Bloqueado, aUsuario[xId].LivrosEmprestados);
+      4: TelaPagarMulta(aUsuario[xId]);
     end;
+    writeln;
+    writeln('Selecione uma op√ß√£o');
+    xOpc := MenuOutros;
   end;
-
- end;
 end;
-end;
-END.
 
+procedure ControllerCliente(var aBiblioteca: TBiblioteca;
+  var aUsuarios: TUsuariosCadastrados);
+var
+  xOpc: Byte;
+begin
+  writeln('Menu Usu√°rios. Selecione uma op√ß√£o.');
+  xOpc := MenuCliente;
+  while xOpc <> 0 do
+  begin
+    case xOpc of
+      1: IncluirNovoUsuario(aUsuarios);
+      2: EscreverResultadoPorNomeUsuario(aUsuarios);
+      3: MostrarUsuariosCastrados(aUsuarios);
+      4: EfetuarBloqueioDesbloqueio(aUsuarios);
+      5: ControllerOutros(aBiblioteca, aUsuarios);
+    end;
+    writeln;
+    writeln('Selecione uma op√ß√£o.');
+    xOpc := MenuCliente;
+  end;
+end;
+procedure ControllerLivro(var aBiblioteca: TBiblioteca);
+var
+  xOpc: Byte;
+begin
+  writeln('Menu Livros. Selecione uma op√ß√£o');
+  xOpc := MenuLivro;
+  while (xOpc <> 0) do
+  begin
+    case xOpc of
+      1: IncluirNovoLivro(aBiblioteca);
+      2: EscreverResultadoPorNomeLivro(aBiblioteca);
+      3: MostrarCatalogo(aBiblioteca);
+      4: EscreverRelacaoLivrosDispEmp(aBiblioteca);
+      5: MostrarLivrosDisponiveisOuEmprestados(aBiblioteca, true);
+      6: MostrarLivrosDisponiveisOuEmprestados(aBiblioteca, false);
+    end;
+    writeln;
+    writeln('Selecione uma op√ß√£o');
+    xOpc := MenuLivro;
+  end;
+end;
+
+procedure ControllerPrincipal;
+var
+  xOpc: Byte;
+  xBiblioteca: TBiblioteca;
+  xUsuarios: TUsuariosCadastrados;
+begin
+  xBiblioteca := BibliotecaInicial;
+  xUsuarios := UsuariosCadastradosIniciais;
+  writeln('Bem vindo ao sistema da biblioteca. Selecione uma op√ß√£o:');
+  xOpc := MenuPrincipal;
+  while (xOpc <> 0) do
+  begin
+    case xOpc of
+      1: ControllerLivro(xBiblioteca);
+      2: ControllerCliente(xBiblioteca, xUsuarios);
+    end;
+    writeln;
+    writeln('Selecione uma op√ß√£o:');
+    xOpc := MenuPrincipal;
+  end;
+end;
+
+end.

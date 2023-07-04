@@ -48,19 +48,10 @@ begin
   Result := opc;
 end;
 
-procedure Controller;
-var
-  xBiblioteca: TBiblioteca;
-  xUsuariosCadastraddos: TUsuariosCadastrados;
-begin
-
-end;
-
 begin
   try
    {  TODO -oUser -cConsole Main : Insert code here }
-    ControladorTeste;
-    MenuProcedure;
+    ControllerPrincipal;
     readln;
   except
     on E: Exception do
@@ -69,5 +60,4 @@ begin
       readln;
     end;
   end;
- MenuProcedure;
 end.
