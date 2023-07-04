@@ -126,7 +126,7 @@ begin
       1: EmprestarLivro(aUsuario[xId].LivrosEmprestados, aBiblioteca);
       2: DevolverLivro(aUsuario[xId].LivrosEmprestados, aUsuario[xId].Historico,
         aBiblioteca);
-      3:
+      3: TelaRenovarPrazo(aUsuario[xId].Bloqueado, aUsuario[xId].LivrosEmprestados);
     end;
   end;
 end;

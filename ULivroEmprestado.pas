@@ -292,7 +292,7 @@ begin
     write('Opção: ');
     readln(xOpc);
   end;
-  Result := xOpc  + 1;
+  Result := xOpc - 1;
 end;
 
 procedure ChecarMultaLivro(var aEmprestado: TLivroEmprestado);
@@ -331,6 +331,11 @@ begin
     ' devolvido com sucesso');
 end;
 
-
+procedure TelaRenovarPrazo(aLivrosEmprestados: THistorico);
+var
+  xOpc: byte;
+begin
+  xOpc := EscolherLivroEmprestado(aLivrosEmprestados);
+end;
 
 end.
