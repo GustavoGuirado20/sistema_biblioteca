@@ -248,7 +248,7 @@ begin
     else
       MostrarLivro(xLivro);
     write('Deseja efetuar uma nova busca? (S/N)');
-    readln(xNovamente);
+    xNovamente := RetornarChar;
   Until UpCase(xNovamente) <> 'S';
 end;
 

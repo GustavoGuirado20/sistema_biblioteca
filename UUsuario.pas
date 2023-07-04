@@ -38,7 +38,7 @@ type
 
 implementation
 
-uses SysUtils;
+uses SysUtils, UOperacoes;
 
 { Procedure para aumentar o número de elementos da Array TUsuariosCadastrados em
   +1 quando o usuário incluir novo usuário }
@@ -237,7 +237,7 @@ begin
     else
       MostrarUsuario(xUsuario);
     write('Deseja efetuar uma nova busca? (S/N)');
-    readln(xNovamente);
+    xNovamente := RetornarChar;
   Until UpCase(xNovamente) <> 'S';
 end;
 
@@ -265,17 +265,17 @@ var
 begin
   Repeat
     write('Insira o código do Usuário: ');
-    readln(xCod);
+    xCod := RetornarInteger;
     while not BuscarUsuarioPorCod(xIndice, aUsuarios, xCod) do
     begin
       writeln('Usuário de código ' + xCod.ToString + ' não localizado. Insira um ' +
       'número correto.');
       write('Código: ');
-      readln(xCod);
+      xCod := RetornarInteger;
     end;
     MostrarUsuario(aUsuarios[xIndice]);
     writeln('Deseja selecionar o usuário ' + aUsuarios[xIndice].Nome +'? (S/N)');
-    readln(xConfirma);
+    xConfirma := RetornarChar;
   until UpCase(xConfirma) = 'S';
   Result := xIndice;
 end;
@@ -286,7 +286,7 @@ var
 begin
   write('O usuário ' + aUsuario.nome + ' está '
     + MostrarBloqueio(aUsuario.Bloqueado) + ' (S/N)');
-  readln(xConfirmar);
+  xConfirmar := RetornarChar;
   if UpCase(xConfirmar)  = 'S' then
   begin
     BloquearOuDesbloquearUsuario(aUsuario);
@@ -313,7 +313,7 @@ begin
     formatarMulta(CalcularMultasFechadas(aUsuario.LivrosEmprestados) +
     CalcularMultasFechadas(aUsuario.Historico)));
   writeln('Efetuar pagamento do débito de ' + aUsuario.nome + '? (S/N)');
-  readln(xConfirma);
+  xConfirma := RetornarChar;
   if UpCase(xConfirma) = 'S' then
   begin
     ZerarMultas(aUsuario.Historico, aUsuario.LivrosEmprestados);
