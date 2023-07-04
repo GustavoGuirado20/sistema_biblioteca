@@ -29,6 +29,8 @@ type
   function UsuariosCadastradosIniciais: TUsuariosCadastrados;
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
   procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario;const aBloquear: boolean);
+  procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
+  procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
 
 implementation
 
@@ -196,6 +198,39 @@ begin
   readln(xCPF);
   aCadastrados[Length(aCadastrados) - 1] := PreencherUsuario(xNome, xEmail,
     xCPF, xTelefone, Length(aCadastrados));
+end;
+
+function BuscarUsuarioPorNome(var aUsuario: TUsuario; const aNome: string;
+  aUsuarios: TUsuariosCadastrados): boolean;
+var
+  I: Integer;
+begin
+  result := false;
+  for i := 0 to pred(length(aUsuarios)) do
+    if (uppercase(aUsuarios[I].Nome) = uppercase(aNome)) then
+    begin
+    result:= true;
+    aUsuario := aUsuarios[I];
+    exit;
+    end;
+end;
+
+procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
+var
+  xNome: String;
+  xUsuario: TUsuario;
+  xNovamente: char;
+begin
+  Repeat
+    Writeln('Escreva o nome do livro desejado');
+    readln(xNome);
+    if not BuscarUsuarioPorNome(xUsuario, xNome, aUsuarios) then
+      writeln('Não existe nenhum usuario com o nome ' + xNome)
+    else
+      MostrarUsuario(xUsuario);
+    write('Deseja efetuar uma nova busca? (S/N)');
+    readln(xNovamente);
+  Until xNovamente <> UpCase('S');
 end;
 
 end.
