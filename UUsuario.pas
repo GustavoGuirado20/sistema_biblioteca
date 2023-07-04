@@ -29,12 +29,12 @@ type
   function UsuariosCadastradosIniciais: TUsuariosCadastrados;
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
   procedure BloquearOuDesbloquearUsuario(var aUsuario: TUsuario);
-  procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
   procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
   procedure ConfirmarBloqueioDesbloqueio(var aUsuario: TUsuario);
   function IdentificarUsuarioPorCod(aUsuarios: TUsuariosCadastrados): Integer;
   procedure EfetuarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
   procedure TelaPagarMulta(var aUsuario: TUsuario);
+  procedure IncluirNovoUsuario(var aCadastrados: TUsuariosCadastrados);
 
 implementation
 
@@ -186,10 +186,11 @@ begin
   aUsuario.Bloqueado := not aUsuario.Bloqueado;
 end;
 { Procedure para que o usuário do sistema cadastre um novo usuário da biblioteca }
-procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
+procedure IncluirNovoUsuario(var aCadastrados: TUsuariosCadastrados);
 var
   xNome, xTelefone, xEmail, xCPF: String;
 begin
+  writeln;
   AumentarUsuariosCadastrados(aCadastrados);
   writeln('Insira os dados do usuário:');
   write('Nome: ');
@@ -202,6 +203,9 @@ begin
   readln(xCPF);
   aCadastrados[Length(aCadastrados) - 1] := PreencherUsuario(xNome, xEmail,
     xCPF, xTelefone, Length(aCadastrados));
+  writeln('Usuário ' + aCadastrados[Length(aCadastrados) - 1].Nome +
+    ' cadastrado com sucesso.');
+  writeln;
 end;
 
 function BuscarUsuarioPorNome(var aUsuario: TUsuario; const aNome: string;
@@ -234,7 +238,7 @@ begin
       MostrarUsuario(xUsuario);
     write('Deseja efetuar uma nova busca? (S/N)');
     readln(xNovamente);
-  Until xNovamente <> UpCase('S');
+  Until UpCase(xNovamente) <> 'S';
 end;
 
 function BuscarUsuarioPorCod(var aIndice: Integer;
@@ -260,7 +264,7 @@ var
   xConfirma: char;
 begin
   Repeat
-    write('Insira o código do livro a ser emprestado: ');
+    write('Insira o código do Usuário: ');
     readln(xCod);
     while not BuscarUsuarioPorCod(xIndice, aUsuarios, xCod) do
     begin
@@ -284,7 +288,13 @@ begin
     + MostrarBloqueio(aUsuario.Bloqueado) + ' (S/N)');
   readln(xConfirmar);
   if UpCase(xConfirmar)  = 'S' then
+  begin
     BloquearOuDesbloquearUsuario(aUsuario);
+    MostrarUsuario(aUsuario);
+  end
+  else
+    writeln('Operação cancelada.');
+
 end;
 
 procedure EfetuarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);

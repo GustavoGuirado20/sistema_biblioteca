@@ -105,7 +105,6 @@ begin
   Writeln('2 - Devolver um Livro');
   Writeln('3 - Renovar um Empréstimo');
   Writeln('4 - Consultar e Pagar Multas');
-  Writeln('5 - Bloquear ou Desbloquear Usuário');
   Writeln('0 - Sair');
 
   readln(opc);
@@ -118,6 +117,7 @@ var
   xId: Integer;
   xOpc: Byte;
 begin
+  writeln('Selecione uma opção');
   xOpc := MenuOutros;
   while xOpc <> 0 do
   begin
@@ -129,6 +129,9 @@ begin
       3: TelaRenovarPrazo(aUsuario[xId].Bloqueado, aUsuario[xId].LivrosEmprestados);
       4: TelaPagarMulta(aUsuario[xId]);
     end;
+    writeln;
+    writeln('Selecione uma opção');
+    xOpc := MenuOutros;
   end;
 end;
 
@@ -137,6 +140,7 @@ procedure ControllerCliente(var aBiblioteca: TBiblioteca;
 var
   xOpc: Byte;
 begin
+  writeln('Menu Usuários. Selecione uma opção.');
   xOpc := MenuCliente;
   while xOpc <> 0 do
   begin
@@ -147,23 +151,30 @@ begin
       4: EfetuarBloqueioDesbloqueio(aUsuarios);
       5: ControllerOutros(aBiblioteca, aUsuarios);
     end;
+    writeln;
+    writeln('Selecione uma opção.');
+    xOpc := MenuCliente;
   end;
 end;
 procedure ControllerLivro(var aBiblioteca: TBiblioteca);
 var
   xOpc: Byte;
 begin
+  writeln('Menu Livros. Selecione uma opção');
   xOpc := MenuLivro;
   while (xOpc <> 0) do
   begin
     case xOpc of
-      1: Incluirnovolivro(aBiblioteca);
+      1: IncluirNovoLivro(aBiblioteca);
       2: EscreverResultadoPorNomeLivro(aBiblioteca);
       3: MostrarCatalogo(aBiblioteca);
       4: EscreverRelacaoLivrosDispEmp(aBiblioteca);
       5: MostrarLivrosDisponiveisOuEmprestados(aBiblioteca, true);
       6: MostrarLivrosDisponiveisOuEmprestados(aBiblioteca, false);
     end;
+    writeln;
+    writeln('Selecione uma opção');
+    xOpc := MenuLivro;
   end;
 end;
 
@@ -175,6 +186,7 @@ var
 begin
   xBiblioteca := BibliotecaInicial;
   xUsuarios := UsuariosCadastradosIniciais;
+  writeln('Bem vindo ao sistema da biblioteca. Selecione uma opção:');
   xOpc := MenuPrincipal;
   while (xOpc <> 0) do
   begin
@@ -182,6 +194,8 @@ begin
       1: ControllerLivro(xBiblioteca);
       2: ControllerCliente(xBiblioteca, xUsuarios);
     end;
+    writeln;
+    writeln('Selecione uma opção:');
     xOpc := MenuPrincipal;
   end;
 end;

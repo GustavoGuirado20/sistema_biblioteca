@@ -154,7 +154,7 @@ var
 begin
   for I := 0 to pred(Length(aLivrosEmprestados)) do
   begin
-    writeln('Opção' + (I + 1).ToString);
+    writeln('Opção ' + (I + 1).ToString);
     writeln(aLivrosEmprestados[I].Livro.Titulo);
     writeln('Data de empréstimo: ' + FormatarData(aLivrosEmprestados[I]
       .DataEmprestimo));
@@ -233,6 +233,7 @@ begin
   for I := 0 to pred(Length(aHistorico)) do
   begin
     MostrarLivroEmprestado(aHistorico[I]);
+    writeln;
   end;
   writeln('-----------------------------------------------------');
 
@@ -277,6 +278,7 @@ begin
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
     PreencherLivroEmprestado(xLivro, Date, EsticarPrazo(Date, EMPRESTIMO_INICIAL));
   AlterarDisponibilidade(aBiblioteca[xIndice]);
+  writeln('Empréstimo realizado com sucesso');
 end;
 
 function EscolherLivroEmprestado(aLivrosEmprestados: THistorico): Byte;
@@ -320,17 +322,22 @@ var
   xOpc: Byte;
   xIndice: Integer;
 begin
+  if Length(aLivrosEmprestados) = 0 then
+  begin
+    MostrarHistorico(aLivrosEmprestados);
+    exit;
+  end;
   writeln('Selecione uma opção');
   xOpc := EscolherLivroEmprestado(aLivrosEmprestados);
   ChecarMultaLivro(aLivrosEmprestados[xOpc]);
   RegistrarDevolucaoLivro(aHistorico, aLivrosEmprestados[xOpc]);
-  LimparLivroEmprestado(aLivrosEmprestados[xOpc]);
-  ReduzirHistorico(aLivrosEmprestados);
   BuscarLivroPorCod(xIndice, aLivrosEmprestados[xOpc].Livro,
     aBiblioteca,aLivrosEmprestados[xOpc].Livro.Cod);
   AlterarDisponibilidade(aBiblioteca[xIndice]);
   writeln('Livro ' + aLivrosEmprestados[xOpc].Livro.Titulo +
     ' devolvido com sucesso');
+  LimparLivroEmprestado(aLivrosEmprestados[xOpc]);
+  ReduzirHistorico(aLivrosEmprestados);
 end;
 
 procedure TelaRenovarPrazo(const aBloqueado: Boolean; var aLivrosEmprestados: THistorico);
@@ -338,6 +345,13 @@ var
   xId: byte;
 begin
   xId := EscolherLivroEmprestado(aLivrosEmprestados);
+
+  if Length(aLivrosEmprestados) = 0 then
+  begin
+    MostrarHistorico(aLivrosEmprestados);
+    exit;
+  end;
+
   if PodeRenovar(aBloqueado, aLivrosEmprestados[xId].DataEmprestimo, aLivrosEmprestados[xId].DataDevolucao) then
   begin
     RenovarPrazo(aLivrosEmprestados[xId]);

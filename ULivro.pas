@@ -159,6 +159,7 @@ begin
   write('Insira a prateleira do livro: ');
   readln(xPrateleira);
   aBiblioteca[Length(aBiblioteca) - 1] := PreencherLivro(Length(aBiblioteca), xTitulo, xAutor, xGenero, xPrateleira, true);
+  writeln;
   writeln('Livro ' + xTitulo + ' cadastrado com sucesso');
   MostrarLivro(aBiblioteca[Length(aBiblioteca) - 1]);
 end;
@@ -248,7 +249,7 @@ begin
       MostrarLivro(xLivro);
     write('Deseja efetuar uma nova busca? (S/N)');
     readln(xNovamente);
-  Until xNovamente <> UpCase('S');
+  Until UpCase(xNovamente) <> 'S';
 end;
 
 //Clacular quantidade de livros emprestados
@@ -267,6 +268,13 @@ begin
   result := cont;
 end;
 
+function FormatarPorcentagem(aPorcentagem: double): String;
+begin
+  Result := FormatFloat('#.##%', aPorcentagem);
+  if aPorcentagem = 0 then
+    Result := '0%';
+end;
+
 procedure EscreverRelacaoLivrosDispEmp(aBiblioteca: TBiblioteca);
 var
   xQtdLivrosDisponiveis: Integer;
@@ -274,13 +282,15 @@ begin
   xQtdLivrosDisponiveis := Length(aBiblioteca) - CalcularQuantidadeEmprestados(aBiblioteca);
   writeln('Total de livros: ' + Length(aBiblioteca).ToString);
   writeln('Livros disponíveis: ' + xQtdLivrosDisponiveis.ToString);
-  writeln('Porcentagem de livros disponíveis: ' + FormatFloat('#.##',
-    ObterPorcentagem(Length(aBiblioteca), xQtdLivrosDisponiveis)));
+  writeln('Porcentagem de livros disponíveis: ' +
+    FormatarPorcentagem(ObterPorcentagem(Length(aBiblioteca),
+    xQtdLivrosDisponiveis)));
   writeln('Livros emprestados: ' +
     CalcularQuantidadeEmprestados(aBiblioteca).ToString);
-  writeln('Porcentagem de livros disponíveis: ' + FormatFloat('#.##',
-    ObterPorcentagem(Length(aBiblioteca),
+  writeln('Porcentagem de livros disponíveis: ' +
+    FormatarPorcentagem(ObterPorcentagem(Length(aBiblioteca),
     CalcularQuantidadeEmprestados(aBiblioteca))));
+  writeln;
 end;
 
 

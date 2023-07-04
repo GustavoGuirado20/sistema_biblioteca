@@ -60,5 +60,4 @@ begin
       readln;
     end;
   end;
- ControllerPrincipal;
 end.
