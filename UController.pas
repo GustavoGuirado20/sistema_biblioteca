@@ -61,7 +61,7 @@ begin
   Writeln('2 - Cliente');
   Writeln('0 - Sair');
 
-  readln(opc);
+  Opc := RetornarByte;
   result := opc;
 end;
 
@@ -78,7 +78,7 @@ begin
   Writeln('6 - Mostrar Livros Emprestados');
   Writeln('0 - Sair');
 
-  readln(opc);
+  opc := RetornarByte;
   result := opc;
 end;
 
@@ -93,7 +93,7 @@ begin
   Writeln('5 - Empréstimos, devoluções e multas');
   Writeln('0 - Sair');
 
-  readln(opc);
+  opc := RetornarByte;
   result := opc;
 end;
 
@@ -107,7 +107,7 @@ begin
   Writeln('4 - Consultar e Pagar Multas');
   Writeln('0 - Sair');
 
-  readln(opc);
+  opc := RetornarByte;
   result := opc;
 end;
 

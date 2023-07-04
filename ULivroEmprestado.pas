@@ -41,7 +41,7 @@ type
 
 implementation
 
-uses SysUtils, DateUtils, UUsuario;
+uses SysUtils, DateUtils, UUsuario, UOperacoes;
 
 {Procedure para aumentar o número de elementos da Array TBiblioteca em +1
 quando o usuário incluir novo usuário}
@@ -255,13 +255,13 @@ begin
 
   Repeat
     write('Insira o código do livro a ser emprestado: ');
-    readln(xCod);
+    xCod := RetornarInteger;
     while (BuscarLivroPorCod(xIndice, xLivro, aBiblioteca, xCod) = false) do
     begin
       writeln('Livro de código ' + xCod.ToString + ' não localizado. Insira um ' +
       'número correto ou 0 para sair.');
       write('Código: ');
-      readln(xCod);
+      xCod := RetornarInteger;
       if xCod = 0 then
         exit;
     end;
@@ -272,7 +272,7 @@ begin
       continue;
     end;
     writeln('Deseja emprestar o livro ' + xLivro.Titulo +'? (S/N)');
-    readln(xConfirma);
+    xConfirma := RetornarChar;
   until UpCase(xConfirma) = 'S';
   AumentarHistorico(aLivrosEmprestados);
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
@@ -288,13 +288,13 @@ var
 begin
   MostrarOpcoesLivroEmprestado(aLivrosEmprestados);
   write('Opção: ');
-  readln(xOpc);
+  xOpc := RetornarByte;
   while (xOpc < 1) or (xOpc > Length(aLivrosEmprestados)) do
   begin
     writeln('Opção inválida. Selecione uma das opções:');
     MostrarOpcoesLivroEmprestado(aLivrosEmprestados);
     write('Opção: ');
-    readln(xOpc);
+    xOpc := RetornarByte;
   end;
   Result := xOpc - 1;
 end;
@@ -311,7 +311,7 @@ begin
   begin
     writeln('O atraso gerou uma multa de ' + FormatarMulta(aEmprestado.Multa) + '.');
     write('Deseja pagar a multa agora? (S/N)');
-    readln(xEscolha);
+    xEscolha := RetornarChar;
     if upCase(xEscolha) = 'S' then
       PagarMulta(aEmprestado)
   end;

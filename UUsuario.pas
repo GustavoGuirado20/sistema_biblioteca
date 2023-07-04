@@ -38,10 +38,10 @@ type
 
 implementation
 
-uses SysUtils;
+uses SysUtils, UOperacoes;
 
-{ Procedure para aumentar o n√∫mero de elementos da Array TUsuariosCadastrados em
-  +1 quando o usu√°rio incluir novo usu√°rio }
+{ Procedure para aumentar o n˙mero de elementos da Array TUsuariosCadastrados em
+  +1 quando o usu·rio incluir novo usu·rio }
 procedure AumentarUsuariosCadastrados(var aUsuariosCadastrados
   : TUsuariosCadastrados);
 begin
@@ -64,7 +64,7 @@ begin
   Result              := xUsuario;
 end;
 
-{ Function para gerar n√∫meros aleat√≥rios para preencher Telefone e CPF de usu√°rios }
+{ Function para gerar n˙meros aleatÛrios para preencher Telefone e CPF de usu·rios }
 function NumeroAleatorio: String;
 var
   xNumeroString: String;
@@ -85,29 +85,29 @@ end;
 function MostrarBloqueio(aBloqueio: Boolean): String;
 begin
   if aBloqueio then
-    Result := 'bloqueado. Deseja desbloque√°-lo?'
+    Result := 'bloqueado. Deseja desbloque·-lo?'
   else
-    Result := 'desbloqueado. Deseja bloque√°-lo?';
+    Result := 'desbloqueado. Deseja bloque·-lo?';
 end;
 
-{ Procedure para popular a Array de usu√°rios automaticamente para n√£o termos que
+{ Procedure para popular a Array de usu·rios automaticamente para n„o termos que
   preenche-la toda hora }
 function UsuariosCadastradosIniciais: TUsuariosCadastrados;
 const
   NOME_EMAIL: array [0 .. 14, 0 .. 1] of String = (('Emilia Azevedo Silva',
-    'emiliasilva72@hmail.com'), ('Kau√™ Goncalves Pinto',
+    'emiliasilva72@hmail.com'), ('KauÍ Goncalves Pinto',
     'kaue.pinto20@gotmail.com'), ('Samuel Cavalcanti Barbosa',
     'samuelzim99@gotmail.com'), ('Isabela Dias Carvalho',
     'isah_gatinha2002@hmail.com'), ('Brenda Castro Ribeiro',
-    'brendacribeiro32@hmail.com'), ('Vin√≠cius Ferreira Costa',
+    'brendacribeiro32@hmail.com'), ('VinÌcius Ferreira Costa',
     'macinhademodela@gotmail.com'), ('Elizeu Drummond',
     'drummondaum@ig.com.br'), ('Carolina Cardoso', 'carol_4356@yahoo.com.br'),
     ('Laura Martins Araujo', 'lmaraujo@hmail.com'),
     ('Leticia Correa', 'correaleticia23@jmail.com'),
-    ('Jo√£o Carlos de Souza', 'joaum_do_feijaum@ig.com.br'),
+    ('Jo„o Carlos de Souza', 'joaum_do_feijaum@ig.com.br'),
     ('Lucas Azevedo', 'seu_luquinhas@hmail.com'),
     ('Estevan Castro', 'estevan_castro9543@gotmail.com'),
-    ('Vit√≥ria Pinto Dias', 'vividias@gotmail.com'),
+    ('VitÛria Pinto Dias', 'vividias@gotmail.com'),
     ('Julio Fernandes', 'juju_fefe@ig.com.br'));
 var
   I: Integer;
@@ -123,9 +123,9 @@ begin
   Result := xUsuarios;
 end;
 
-{ Function para retornar o telefone de TUsuario na formata√ß√£o (##) #####-####
-  e muda o terceiro algarismo para 9 para simular um n√∫mero de telefone real
-  caso possua 11 caracteres, sen√£o retorna a string original }
+{ Function para retornar o telefone de TUsuario na formataÁ„o (##) #####-####
+  e muda o terceiro algarismo para 9 para simular um n˙mero de telefone real
+  caso possua 11 caracteres, sen„o retorna a string original }
 function FormatarTelefone(aTel: String): String;
 begin
   if aTel.Length = 11 then
@@ -138,8 +138,8 @@ begin
     Result := aTel;
 end;
 
-{ Function para retornar o telefone de TUsuario na formata√ß√£o ###.###.###-##
-  caso possua 11 caracteres, sen√£o retorna a string original }
+{ Function para retornar o telefone de TUsuario na formataÁ„o ###.###.###-##
+  caso possua 11 caracteres, sen„o retorna a string original }
 function FormatarCPF(aCPF: String): String;
 begin
   if aCPF.Length = 11 then
@@ -149,10 +149,10 @@ begin
     Result := aCPF;
 end;
 
-{ Procedure para escrever as informa√ß√µes de um usu√°rio na tela }
+{ Procedure para escrever as informaÁıes de um usu·rio na tela }
 procedure MostrarUsuario(aUsuario: TUsuario);
 begin
-  writeln('C√≥digo  : ' + aUsuario.Cod.ToString);
+  writeln('CÛdigo  : ' + aUsuario.Cod.ToString);
   writeln('Nome    : ' + aUsuario.Nome);
   writeln('Telefone: ' + FormatarTelefone(aUsuario.Telefone));
   writeln('CPF     : ' + FormatarCPF(aUsuario.CPF));
@@ -162,19 +162,19 @@ begin
   writeln('Livros emprestados');
   MostrarHistorico(aUsuario.LivrosEmprestados);
   writeln;
-  writeln('Hist√≥rico de empr√©stimos');
+  writeln('HistÛrico de emprÈstimos');
   MostrarHistorico(aUsuario.Historico);
   writeln;
   if aUsuario.Bloqueado then
-    writeln('USU√ÅRIO BLOQUEADO');
+    writeln('USU¡RIO BLOQUEADO');
 end;
 
-{ Procedure para escrever as informa√ß√µes de todos os usu√°rios cadastrados na tela }
+{ Procedure para escrever as informaÁıes de todos os usu·rios cadastrados na tela }
 procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
 var
   I: Integer;
 begin
-  writeln('Total de usu√°rios: ' + Length(aUsuarios).ToString);
+  writeln('Total de usu·rios: ' + Length(aUsuarios).ToString);
   for I := 0 to pred(Length(aUsuarios)) do
   begin
     MostrarUsuario(aUsuarios[I]);
@@ -185,14 +185,14 @@ procedure BloquearOuDesbloquearUsuario(var aUsuario: TUsuario);
 begin
   aUsuario.Bloqueado := not aUsuario.Bloqueado;
 end;
-{ Procedure para que o usu√°rio do sistema cadastre um novo usu√°rio da biblioteca }
+{ Procedure para que o usu·rio do sistema cadastre um novo usu·rio da biblioteca }
 procedure IncluirNovoUsuario(var aCadastrados: TUsuariosCadastrados);
 var
   xNome, xTelefone, xEmail, xCPF: String;
 begin
   writeln;
   AumentarUsuariosCadastrados(aCadastrados);
-  writeln('Insira os dados do usu√°rio:');
+  writeln('Insira os dados do usu·rio:');
   write('Nome: ');
   readln(xNome);
   write('Telefone com DDD: ');
@@ -203,7 +203,7 @@ begin
   readln(xCPF);
   aCadastrados[Length(aCadastrados) - 1] := PreencherUsuario(xNome, xEmail,
     xCPF, xTelefone, Length(aCadastrados));
-  writeln('Usu√°rio ' + aCadastrados[Length(aCadastrados) - 1].Nome +
+  writeln('Usu·rio ' + aCadastrados[Length(aCadastrados) - 1].Nome +
     ' cadastrado com sucesso.');
   writeln;
 end;
@@ -233,11 +233,11 @@ begin
     Writeln('Escreva o nome do livro desejado');
     readln(xNome);
     if not BuscarUsuarioPorNome(xUsuario, xNome, aUsuarios) then
-      writeln('N√£o existe nenhum usuario com o nome ' + xNome)
+      writeln('N„o existe nenhum usuario com o nome ' + xNome)
     else
       MostrarUsuario(xUsuario);
     write('Deseja efetuar uma nova busca? (S/N)');
-    readln(xNovamente);
+    xNovamente := RetornarChar;
   Until UpCase(xNovamente) <> 'S';
 end;
 
@@ -264,18 +264,18 @@ var
   xConfirma: char;
 begin
   Repeat
-    write('Insira o c√≥digo do Usu√°rio: ');
-    readln(xCod);
+    write('Insira o cÛdigo do Usu·rio: ');
+    xCod := RetornarInteger;
     while not BuscarUsuarioPorCod(xIndice, aUsuarios, xCod) do
     begin
-      writeln('Usu√°rio de c√≥digo ' + xCod.ToString + ' n√£o localizado. Insira um ' +
-      'n√∫mero correto.');
-      write('C√≥digo: ');
-      readln(xCod);
+      writeln('Usu·rio de cÛdigo ' + xCod.ToString + ' n„o localizado. Insira um ' +
+      'n˙mero correto.');
+      write('CÛdigo: ');
+      xCod := RetornarInteger;
     end;
     MostrarUsuario(aUsuarios[xIndice]);
-    writeln('Deseja selecionar o usu√°rio ' + aUsuarios[xIndice].Nome +'? (S/N)');
-    readln(xConfirma);
+    writeln('Deseja selecionar o usu·rio ' + aUsuarios[xIndice].Nome +'? (S/N)');
+    xConfirma := RetornarChar;
   until UpCase(xConfirma) = 'S';
   Result := xIndice;
 end;
@@ -284,16 +284,16 @@ procedure ConfirmarBloqueioDesbloqueio(var aUsuario: TUsuario);
 var
   xConfirmar: char;
 begin
-  write('O usu√°rio ' + aUsuario.nome + ' est√° '
+  write('O usu·rio ' + aUsuario.nome + ' est· '
     + MostrarBloqueio(aUsuario.Bloqueado) + ' (S/N)');
-  readln(xConfirmar);
+  xConfirmar := RetornarChar;
   if UpCase(xConfirmar)  = 'S' then
   begin
     BloquearOuDesbloquearUsuario(aUsuario);
     MostrarUsuario(aUsuario);
   end
   else
-    writeln('Opera√ß√£o cancelada.');
+    writeln('OperaÁ„o cancelada.');
 
 end;
 
@@ -312,8 +312,8 @@ begin
   writeln('Total de multa de livros devolvidos ou com prazo renovado: ' +
     formatarMulta(CalcularMultasFechadas(aUsuario.LivrosEmprestados) +
     CalcularMultasFechadas(aUsuario.Historico)));
-  writeln('Efetuar pagamento do d√©bito de ' + aUsuario.nome + '? (S/N)');
-  readln(xConfirma);
+  writeln('Efetuar pagamento do dÈbito de ' + aUsuario.nome + '? (S/N)');
+  xConfirma := RetornarChar;
   if UpCase(xConfirma) = 'S' then
   begin
     ZerarMultas(aUsuario.Historico, aUsuario.LivrosEmprestados);
@@ -321,7 +321,7 @@ begin
 
     if CalcularMultasAbertas(aUsuario.LivrosEmprestados) > 0 then
     begin
-      writeln('Aviso: Ainda existem d√©bitos de livros n√£o devolvidos ou ' +
+      writeln('Aviso: Ainda existem dÈbitos de livros n„o devolvidos ou ' +
       'renovados. Valor atual: ' +
       formatarMulta(calcularMultasAbertas(aUsuario.LivrosEmprestados)));
     end;
@@ -333,3 +333,4 @@ begin
 
 end;
 end.
+
