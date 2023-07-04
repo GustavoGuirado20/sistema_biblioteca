@@ -1,4 +1,4 @@
-unit UController;
+﻿unit UController;
 
 
 interface
@@ -186,6 +186,7 @@ var
 begin
   xBiblioteca := BibliotecaInicial;
   xUsuarios := UsuariosCadastradosIniciais;
+  OperacoesIniciais(xBiblioteca, xUsuarios);
   writeln('Bem vindo ao sistema da biblioteca. Selecione uma opção:');
   xOpc := MenuPrincipal;
   while (xOpc <> 0) do
