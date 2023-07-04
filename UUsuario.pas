@@ -61,7 +61,7 @@ begin
   xUsuario.CPF       := aCPF;
   xUsuario.Bloqueado := false;
   // LimparLivroEmprestado(xUsuario.LivrosEmprestados);
-  Result              := xUsuario;
+  Result             := xUsuario;
 end;
 
 { Function para gerar números aleatórios para preencher Telefone e CPF de usuários }
@@ -230,7 +230,7 @@ var
   xNovamente: char;
 begin
   Repeat
-    Writeln('Escreva o nome do livro desejado');
+    Writeln('Escreva o nome do usuário');
     readln(xNome);
     if not BuscarUsuarioPorNome(xUsuario, xNome, aUsuarios) then
       writeln('Não existe nenhum usuario com o nome ' + xNome)

@@ -14,6 +14,9 @@ type
 
   THistorico = Array of TLivroEmprestado;
 
+  procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
+    var aLivroEmprestado: TLivroEmprestado);
+  procedure ChecarMultaLivro(var aEmprestado: TLivroEmprestado);
   function FormatarMulta(aMulta: double): String;
   function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
                                     aDataDevolucao: TDate): TLivroEmprestado;
@@ -32,8 +35,6 @@ type
   procedure ReduzirHistorico(var aHistorico: THistorico);
   procedure DevolverLivro(var aLivrosEmprestados, aHistorico: THistorico;
     var aBiblioteca: TBiblioteca);
-  procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
-    aLivroEmprestado: TLivroEmprestado);
   function PodeRenovar(const aBloqueado: boolean; const aDataEmprestimo, aDataDevolucao: TDate): boolean;
   procedure TelaRenovarPrazo(const aBloqueado: Boolean; var aLivrosEmprestados: THistorico);
   procedure ZerarMultas(var aHistorico, aEmprestados: THistorico);
@@ -180,7 +181,7 @@ begin
 end;
 
 procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
-  aLivroEmprestado: TLivroEmprestado);
+  var aLivroEmprestado: TLivroEmprestado);
 begin
   AumentarHistorico(aHistorico);
   aHistorico[pred(Length(aHistorico))]               := aLivroEmprestado;
