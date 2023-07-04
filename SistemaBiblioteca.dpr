@@ -48,18 +48,9 @@ begin
   Result := opc;
 end;
 
-procedure Controller;
-var
-  xBiblioteca: TBiblioteca;
-  xUsuariosCadastraddos: TUsuariosCadastrados;
-begin
-
-end;
-
 begin
   try
    {  TODO -oUser -cConsole Main : Insert code here }
-    ControladorTeste;
     ControllerPrincipal;
     readln;
   except

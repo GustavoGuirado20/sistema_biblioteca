@@ -88,12 +88,47 @@ begin
   Writeln('1 - Cadastrar Usuário');
   Writeln('2 - Pesquisar Usuário');
   Writeln('3 - Mostrar Todos os Usuários');
-  Writeln('4 - Bloquear Usuário');
+  Writeln('4 - Bloquear ou Desbloquear Usuário');
   Writeln('5 - Empréstimos, devoluções e multas');
   Writeln('0 - Sair');
 
   readln(opc);
   result := opc;
+end;
+
+function MenuOutros: Byte;
+var
+  opc: byte;
+begin
+  Writeln('1 - Emprestar um Livro');
+  Writeln('2 - Devolver um Livro');
+  Writeln('3 - Renovar um Empréstimo');
+  Writeln('4 - Consultar e Pagar Multas');
+  Writeln('5 - Bloquear ou Desbloquear Usuário');
+  Writeln('6 - Empréstimos, devoluções e multas');
+  Writeln('0 - Sair');
+
+  readln(opc);
+  result := opc;
+end;
+
+procedure ControllerOutros(var aBiblioteca: TBiblioteca;
+  var aUsuario: TUsuariosCadastrados);
+var
+  xId: Integer;
+  xOpc: Byte;
+begin
+  xOpc := MenuOutros;
+  while xOpc <> 0 do
+  begin
+    xId := IdentificarUsuarioPorCod(aUsuario);
+    case xOpc of
+      1: EmprestarLivro(aUsuario[xId].LivrosEmprestados, aBiblioteca);
+      2: DevolverLivro(aUsuario[xId].LivrosEmprestados, aUsuario[xId].Historico,
+        aBiblioteca);
+      3:
+    end;
+  end;
 end;
 
 procedure ControllerCliente(var aBiblioteca: TBiblioteca;
@@ -107,6 +142,9 @@ begin
     case xOpc of
       1: IncluirNovoUsuario(aUsuarios);
       2: EscreverResultadoPorNomeUsuario(aUsuarios);
+      3: MostrarUsuariosCastrados(aUsuarios);
+      4: ConfirmarBloqueioDesbloqueio(aUsuarios);
+      5: ControllerOutros(aBiblioteca, aUsuarios);
     end;
   end;
 end;

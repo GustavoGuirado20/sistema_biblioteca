@@ -28,9 +28,11 @@ type
   function NumeroAleatorio: String;
   function UsuariosCadastradosIniciais: TUsuariosCadastrados;
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
-  procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario);
+  procedure BloquearOuDesbloquearUsuario(var aUsuario: TUsuario);
   procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
   procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
+  procedure ConfirmarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
+  function IdentificarUsuarioPorCod(aUsuarios: TUsuariosCadastrados): Integer;
 
 implementation
 
@@ -81,9 +83,9 @@ end;
 function MostrarBloqueio(aBloqueio: Boolean): String;
 begin
   if aBloqueio then
-    Result := 'bloqueado'
+    Result := 'bloqueado. Deseja desbloqueá-lo?'
   else
-    Result := 'desbloqueado';
+    Result := 'desbloqueado. Deseja bloqueá-lo?';
 end;
 
 { Procedure para popular a Array de usuários automaticamente para não termos que
@@ -177,7 +179,7 @@ begin
   end;
 end;
 
-procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario);
+procedure BloquearOuDesbloquearUsuario(var aUsuario: TUsuario);
 begin
   aUsuario.Bloqueado := not aUsuario.Bloqueado;
 end;
@@ -209,13 +211,11 @@ begin
   for i := 0 to pred(length(aUsuarios)) do
     if (uppercase(aUsuarios[I].Nome) = uppercase(aNome)) then
     begin
-    result:= true;
-    aUsuario := aUsuarios[I];
-    exit;
+      result:= true;
+      aUsuario := aUsuarios[I];
+      exit;
     end;
 end;
-
-
 
 procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
 var
@@ -272,5 +272,18 @@ begin
     readln(xConfirma);
   until UpCase(xConfirma) = 'S';
   Result := xIndice;
+end;
+
+procedure ConfirmarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
+var
+  xId: Integer;
+  xConfirmar: char;
+begin
+  xId := IdentificarUsuarioPorCod(aUsuarios);
+  write('O usuário ' + aUsuarios[xId].nome + ' está '
+    + MostrarBloqueio(aUsuarios[xId].Bloqueado) + ' (S/N)');
+  readln(xConfirmar);
+  if UpCase(xConfirmar)  = 'S' then
+    BloquearOuDesbloquearUsuario(aUsuarios[xId]);
 end;
 end.

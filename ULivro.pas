@@ -29,10 +29,10 @@ type
   procedure AlterarDisponibilidade(var aLivro: TLivro);
   function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro;
     const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
-  {procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca;
-    const aDisponivel: Boolean);}
+  procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca;
+    const aDisponivel: Boolean);
   function BuscarLivroPorNome(var aLivro:TLivro; Nome:string; aBiblioteca:TBiblioteca): boolean;
-  procedure EscreverResultadoPesquisaPorNome(const aBiblioteca: TBiblioteca);
+  procedure EscreverResultadoPorNomeLivro(const aBiblioteca: TBiblioteca);
   function CalcularQuantidadeEmprestados(aBiblioteca: TBiblioteca): Integer;
   procedure EscreverRelacaoLivrosDispEmp(aBiblioteca: TBiblioteca);
 
@@ -129,7 +129,7 @@ begin
 end;
 
 {Procedure para escrever na tela todos os livros emprestados ou livres.}
-{procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
+procedure MostrarLivrosDisponiveisOuEmprestados(const aBiblioteca: TBiblioteca; const aDisponivel: Boolean);
 var
   xTexto: String;
   I, Contador: Integer;
@@ -140,7 +140,7 @@ begin
     if aBiblioteca[I].Disponivel = aDisponivel then
       MostrarLivro(aBiblioteca[I]);
   end;
-end;  }
+end;
 
 {Procedure que permite ao usuário do sistema cadastrar um novo livro e o insere
 no último elemento da array aBiblioteca}
@@ -200,7 +200,8 @@ begin
 end;}
 
 {Function que retorna um TLivro da array aBiblioteca cujo codigo corresponda ao parâmetro aCod}
-function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro; const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
+function BuscarLivroPorCod(var aIndice: Integer; var aLivro: TLivro;
+  const aBiblioteca: TBiblioteca; const aCod: Integer): Boolean;
 var
   I: Integer;
 begin
@@ -220,7 +221,7 @@ end;
 
 function BuscarLivroPorNome(var aLivro:TLivro; Nome:string; aBiblioteca:TBiblioteca): boolean;
 var
-  cont,i:integer;
+  I: Integer;
 begin
   result := false;
   for i := 0 to pred(length(aBiblioteca)) do
@@ -228,11 +229,11 @@ begin
     begin
     result:= true;
     alivro := abiblioteca[i];
-
+    exit;
     end;
 end;
 
-procedure EscreverResultadoPesquisaPorNome(const aBiblioteca: TBiblioteca);
+procedure EscreverResultadoPorNomeLivro(const aBiblioteca: TBiblioteca);
 var
   xNome: String;
   xLivro: TLivro;

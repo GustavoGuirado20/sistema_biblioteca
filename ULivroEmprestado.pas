@@ -17,7 +17,7 @@ type
   function FormatarMulta(aMulta: double): String;
   function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
                                     aDataDevolucao: TDate): TLivroEmprestado;
-  function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
+  procedure RenovarPrazo(const aBloqueado: boolean; var aEmprestado: TLivroEmprestado);
   function FormatarData(aData: TDate): String;
   function EscolherLivroEmprestado(aLivrosEmprestados: THistorico): Byte;
   function CalcularMultasAbertas(aHistorico: THistorico): double;
@@ -34,6 +34,7 @@ type
     var aBiblioteca: TBiblioteca);
   procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
     aLivroEmprestado: TLivroEmprestado);
+  function PodeRenovar(const aBloqueado: boolean; const aDataEmprestimo, aDataDevolucao: TDate): boolean;
 
 
 implementation
@@ -106,11 +107,25 @@ begin
   Result := FormatFloat('R$ 0.00', aMulta);
 end;
 
-function RenovarPrazo(const aDataEmprestimo: TDate; const aDias: Integer): TDate;
+function PodeRenovar(const aBloqueado: boolean; const aDataEmprestimo, aDataDevolucao: TDate): boolean;
 begin
-  Result := IncDay(aDataEmprestimo, aDias);
+  Result := not aBloqueado;
+  if (DaysBetween(aDataEmprestimo, aDataDevolucao) >= 21) then
+    Result := false;
 end;
 
+function EsticarPrazo(const aDataInicial: TDate; const aDiasAumentados: Integer): TDate;
+begin
+  Result := IncDay(aDataInicial, aDiasAumentados);
+end;
+
+procedure RenovarPrazo(const aBloqueado: boolean; var aEmprestado: TLivroEmprestado);
+const
+  DIAS_RENOVACAO = 7;
+begin
+  if PodeRenovar(aBloqueado, aEmprestado.DataEmprestimo, aEmprestado.DataDevolucao) then
+    aEmprestado.DataDevolucao := EsticarPrazo(aEmprestado.DataDevolucao, DIAS_RENOVACAO);
+end;
 
 {Procedure para limpar todas as informações de livro emprestado de um usuário,
 usada tanto para fazer a devolução de um livro como para registrar um usuário
@@ -222,6 +237,8 @@ begin
 end;
 
 procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
+const
+  EMPRESTIMO_INICIAL = 7;
 var
   xIndice, xCod, I: Integer;
   xLivro: TLivro;
@@ -256,7 +273,7 @@ begin
   until UpCase(xConfirma) = 'S';
   AumentarHistorico(aLivrosEmprestados);
   aLivrosEmprestados[Length(aLivrosEmprestados) - 1] :=
-    PreencherLivroEmprestado(xLivro, Date, RenovarPrazo(Date, 7));
+    PreencherLivroEmprestado(xLivro, Date, EsticarPrazo(Date, EMPRESTIMO_INICIAL));
   AlterarDisponibilidade(aBiblioteca[xIndice]);
 end;
 
@@ -313,6 +330,7 @@ begin
   writeln('Livro ' + aLivrosEmprestados[xOpc].Livro.Titulo +
     ' devolvido com sucesso');
 end;
+
 
 
 end.
