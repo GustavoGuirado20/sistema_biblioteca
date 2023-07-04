@@ -6,7 +6,7 @@ interface
 uses
   UUsuario, ULivroEmprestado, ULivro, UOperacoes;
 
-  procedure MenuProcedure;
+  procedure ControllerPrincipal;
 implementation
 
 uses
@@ -75,7 +75,7 @@ begin
   Writeln('2 - Pesquisar Livro');
   Writeln('3 - Mostrar Catálogo');
   Writeln('4 - Quantidade de Livros Emprestados x Disponíveis');
-  Writeln('5 - Pocentagem de Livros Emprestados x Disponíveis');
+  Writeln('5 - Porcentagem de Livros Emprestados x Disponíveis');
   Writeln('6 - Mostrar Livros Disponíveis ou Emprestados');
   Writeln('7 - Buscar Por Código');
   Writeln('0 - Sair');
@@ -92,48 +92,25 @@ begin
   Writeln('2 - Pesquisar Usuário');
   Writeln('3 - Mostrar Todos os Usuários');
   Writeln('4 - Bloquear Usuário');
-  Writeln('0 Sair');
+  Writeln('0 - Sair');
 
   readln(opc);
   result := opc;
 end;
 
-procedure MenuProcedure;
+procedure ControllerLivro(var aBiblioteca: TBiblioteca);
 var
-  opc:byte;
-  xBiblioteca:TBiblioteca;
-  xLivro:TLivro;
-  xLivroEmprestado:TLivroEmprestado;
-  nome:string;
-  resultado:boolean;
-  falso,respostas:integer;
+  xOpc: Byte;
 begin
-
-  while (MenuPrincipal <> 0) do
+  xOpc := MenuLivro;
+  while (xOpc <> 0) do
   begin
-    case MenuPrincipal of
-    1:
-     begin
-      while (MenuLivro <> 0) do
-        case MenuLivro of
-        1:incluirnovolivro(xBiblioteca);
-
-        2:begin
-            repeat
-            Writeln('Escreva o nome do livro desejado');
-            readln(nome);
-            BuscarLivroPorNome(xLivro, nome,xBiblioteca);
-            if (resultado = false) then
-            writeln('Não existe um livro catalogado com o nome informado');
-            until resultado = true;
-            MostrarLivro(xlivro);
-          end;
-
-        3:MostrarCatalogo(xBiblioteca);
-
-        4:Writeln('A Biblioteca possui ' + CalcularQuantidades(xBiblioteca,falso).Tostring + ' livros disponíveis e ' + falso.tostring + ' livros emprestados');
-
-        5:Writeln((CalcularQuantidades(xBiblioteca,falso) * 100 / pred(length(xBiblioteca))).ToString	 + ' dos estão disponíveis e ' + (falso * 100 / pred(length(xBiblioteca))).ToString	 + ' estão emprestados');
+    case xOpc of
+      1: Incluirnovolivro(aBiblioteca);
+      2: EscreverResultadoPesquisaPorNome(aBiblioteca);
+      3: MostrarCatalogo(aBiblioteca);
+      4: EscreverRelacaoLivrosDispEmp
+      5: Writeln((CalcularQuantidades(xBiblioteca,falso) * 100 / pred(length(xBiblioteca))).ToString	 + ' dos estão disponíveis e ' + (falso * 100 / pred(length(xBiblioteca))).ToString	 + ' estão emprestados');
 
         6:begin
             Writeln('Digite 1 para livros emprestados e 2 para livors diponíveis');
@@ -149,6 +126,31 @@ begin
             MostrarLivro(xlivro);
            end;
         end;
+  end;
+
+
+end;
+
+procedure ControllerPrincipal;
+var
+  xOpc: Byte;
+  xBiblioteca: TBiblioteca;
+  xUsuarios: TUsuariosCadastrados;
+  xLivro: TLivro;
+  xLivroEmprestado: TLivroEmprestado;
+  xNome: String;
+  xResultado: Boolean;
+  xFalso,xRespostas: Integer;
+begin
+  xBiblioteca := BibliotecaInicial;
+  xUsuarios := UsuariosCadastradosIniciais;
+  xOpc := MenuPrincipal;
+  while (xOpc <> 0) do
+  begin
+    case xOpc of
+    1:
+     begin
+
     end;
   end;
  end;

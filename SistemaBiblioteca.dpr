@@ -60,7 +60,7 @@ begin
   try
    {  TODO -oUser -cConsole Main : Insert code here }
     ControladorTeste;
-    MenuProcedure;
+    ControllerPrincipal;
     readln;
   except
     on E: Exception do
@@ -69,5 +69,5 @@ begin
       readln;
     end;
   end;
- MenuProcedure;
+ ControllerPrincipal;
 end.

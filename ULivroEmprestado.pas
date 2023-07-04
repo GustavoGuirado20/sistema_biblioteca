@@ -26,14 +26,15 @@ type
   procedure MostrarLivroEmprestado(aEmprestado: TLivroEmprestado);
   procedure AumentarHistorico(var aHistorico: THistorico);
   procedure LimparLivroEmprestado(aEmprestado: TLivroEmprestado);
-  procedure EmprestarLivro(var aLivrosEmprestados: THistorico; const aBiblioteca: TBiblioteca);
+  procedure EmprestarLivro(var aLivrosEmprestados: THistorico;
+    const aBiblioteca: TBiblioteca);
   procedure MostrarHistorico(aHistorico: THistorico);
   procedure ReduzirHistorico(var aHistorico: THistorico);
   procedure DevolverLivro(var aLivrosEmprestados, aHistorico: THistorico;
     var aBiblioteca: TBiblioteca);
   procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
-  aLivroEmprestado: TLivroEmprestado);
-  function CalcularQuantidades(aBiblioteca: TBiblioteca; var emprestados:integer): integer;
+    aLivroEmprestado: TLivroEmprestado);
+
 
 implementation
 
@@ -313,20 +314,5 @@ begin
     ' devolvido com sucesso');
 end;
 
-//Clacular quantidade de livros emprestados
-function CalcularQuantidades(aBiblioteca: TBiblioteca; var emprestados:integer): integer;
-var
-  i,cont:integer;
-begin
-  cont :=0;
-  emprestados := 0;
-  for i := 0 to pred(length(aBiblioteca)) do
-    if aBiblioteca[i].Disponivel = true then
-    cont := cont + 1
-    else
-    emprestados := emprestados + 1;
 
-  result := cont;
-
-end;
 end.
