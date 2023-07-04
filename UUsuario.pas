@@ -28,7 +28,7 @@ type
   function NumeroAleatorio: String;
   function UsuariosCadastradosIniciais: TUsuariosCadastrados;
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
-  procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario;const aBloquear: boolean);
+  procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario);
   procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
   procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
 
@@ -81,9 +81,9 @@ end;
 function MostrarBloqueio(aBloqueio: Boolean): String;
 begin
   if aBloqueio then
-    Result := 'Sim'
+    Result := 'bloqueado'
   else
-    Result := 'Não';
+    Result := 'desbloqueado';
 end;
 
 { Procedure para popular a Array de usuários automaticamente para não termos que
@@ -177,9 +177,9 @@ begin
   end;
 end;
 
-procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario; const aBloquear: boolean);
+procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario);
 begin
-  aUsuario.Bloqueado := aBloquear;
+  aUsuario.Bloqueado := not aUsuario.Bloqueado;
 end;
 { Procedure para que o usuário do sistema cadastre um novo usuário da biblioteca }
 procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
@@ -215,6 +215,8 @@ begin
     end;
 end;
 
+
+
 procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
 var
   xNome: String;
@@ -233,4 +235,42 @@ begin
   Until xNovamente <> UpCase('S');
 end;
 
+function BuscarUsuarioPorCod(var aIndice: Integer;
+  const aUsuarios: TUsuariosCadastrados; const aCod: Integer): Boolean;
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aUsuarios)) do
+  begin
+    if aCod = aUsuarios[I].Cod then
+    begin
+      aIndice := I;
+      Result := true;
+      Exit;
+    end;
+  end;
+  Result := false;
+end;
+
+function IdentificarUsuarioPorCod(aUsuarios: TUsuariosCadastrados): Integer;
+var
+  xIndice, xCod: Integer;
+  xConfirma: char;
+begin
+  Repeat
+    write('Insira o código do livro a ser emprestado: ');
+    readln(xCod);
+    while not BuscarUsuarioPorCod(xIndice, aUsuarios, xCod) do
+    begin
+      writeln('Usuário de código ' + xCod.ToString + ' não localizado. Insira um ' +
+      'número correto.');
+      write('Código: ');
+      readln(xCod);
+    end;
+    MostrarUsuario(aUsuarios[xIndice]);
+    writeln('Deseja selecionar o usuário ' + aUsuarios[xIndice].Nome +'? (S/N)');
+    readln(xConfirma);
+  until UpCase(xConfirma) = 'S';
+  Result := xIndice;
+end;
 end.
