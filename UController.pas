@@ -22,8 +22,8 @@ var
   xOPC: byte;
 begin
   writeln('Menu principal');
-  writeln('Selecione uma opÁ„o abaixo:');
-  writeln('1 - Usu·rios');
+  writeln('Selecione uma op√ß√£o abaixo:');
+  writeln('1 - Usu√°rios');
   writeln('2 - Acervo');
   writeln('0 - Sair');
   readln(xOpc);
@@ -72,9 +72,9 @@ var
 begin
   Writeln('1 - Cadastrar Livro');
   Writeln('2 - Pesquisar Livro');
-  Writeln('3 - Mostrar Cat·logo');
-  Writeln('4 - InformaÁıes de Livros Emprestados x DisponÌveis');
-  Writeln('5 - Mostrar Livros DisponÌveis');
+  Writeln('3 - Mostrar Cat√°logo');
+  Writeln('4 - Informa√ß√µes de Livros Emprestados x Dispon√≠veis');
+  Writeln('5 - Mostrar Livros Dispon√≠veis');
   Writeln('6 - Mostrar Livros Emprestados');
   Writeln('0 - Sair');
 
@@ -86,11 +86,11 @@ function MenuCliente:byte;
 var
   opc:byte;
 begin
-  Writeln('1 - Cadastrar Usu·rio');
-  Writeln('2 - Pesquisar Usu·rio');
-  Writeln('3 - Mostrar Todos os Usu·rios');
-  Writeln('4 - Bloquear ou Desbloquear Usu·rio');
-  Writeln('5 - EmprÈstimos, devoluÁıes e multas');
+  Writeln('1 - Cadastrar Usu√°rio');
+  Writeln('2 - Pesquisar Usu√°rio');
+  Writeln('3 - Mostrar Todos os Usu√°rios');
+  Writeln('4 - Bloquear ou Desbloquear Usu√°rio');
+  Writeln('5 - Empr√©stimos, devolu√ß√µes e multas');
   Writeln('0 - Sair');
 
   opc := RetornarByte;
@@ -103,7 +103,7 @@ var
 begin
   Writeln('1 - Emprestar um Livro');
   Writeln('2 - Devolver um Livro');
-  Writeln('3 - Renovar um EmprÈstimo');
+  Writeln('3 - Renovar um Empr√©stimo');
   Writeln('4 - Consultar e Pagar Multas');
   Writeln('0 - Sair');
 
@@ -117,7 +117,7 @@ var
   xId: Integer;
   xOpc: Byte;
 begin
-  writeln('Selecione uma opÁ„o');
+  writeln('Selecione uma op√ß√£o');
   xOpc := MenuOutros;
   while xOpc <> 0 do
   begin
@@ -130,7 +130,7 @@ begin
       4: TelaPagarMulta(aUsuario[xId]);
     end;
     writeln;
-    writeln('Selecione uma opÁ„o');
+    writeln('Selecione uma op√ß√£o');
     xOpc := MenuOutros;
   end;
 end;
@@ -140,7 +140,7 @@ procedure ControllerCliente(var aBiblioteca: TBiblioteca;
 var
   xOpc: Byte;
 begin
-  writeln('Menu Usu·rios. Selecione uma opÁ„o.');
+  writeln('Menu Usu√°rios. Selecione uma op√ß√£o.');
   xOpc := MenuCliente;
   while xOpc <> 0 do
   begin
@@ -152,7 +152,7 @@ begin
       5: ControllerOutros(aBiblioteca, aUsuarios);
     end;
     writeln;
-    writeln('Selecione uma opÁ„o.');
+    writeln('Selecione uma op√ß√£o.');
     xOpc := MenuCliente;
   end;
 end;
@@ -160,7 +160,7 @@ procedure ControllerLivro(var aBiblioteca: TBiblioteca);
 var
   xOpc: Byte;
 begin
-  writeln('Menu Livros. Selecione uma opÁ„o');
+  writeln('Menu Livros. Selecione uma op√ß√£o');
   xOpc := MenuLivro;
   while (xOpc <> 0) do
   begin
@@ -173,7 +173,7 @@ begin
       6: MostrarLivrosDisponiveisOuEmprestados(aBiblioteca, false);
     end;
     writeln;
-    writeln('Selecione uma opÁ„o');
+    writeln('Selecione uma op√ß√£o');
     xOpc := MenuLivro;
   end;
 end;
@@ -186,7 +186,7 @@ var
 begin
   xBiblioteca := BibliotecaInicial;
   xUsuarios := UsuariosCadastradosIniciais;
-  writeln('Bem vindo ao sistema da biblioteca. Selecione uma opÁ„o:');
+  writeln('Bem vindo ao sistema da biblioteca. Selecione uma op√ß√£o:');
   xOpc := MenuPrincipal;
   while (xOpc <> 0) do
   begin
@@ -195,7 +195,7 @@ begin
       2: ControllerCliente(xBiblioteca, xUsuarios);
     end;
     writeln;
-    writeln('Selecione uma opÁ„o:');
+    writeln('Selecione uma op√ß√£o:');
     xOpc := MenuPrincipal;
   end;
 end;
