@@ -28,7 +28,9 @@ type
   function NumeroAleatorio: String;
   function UsuariosCadastradosIniciais: TUsuariosCadastrados;
   procedure MostrarUsuariosCastrados(const aUsuarios: TUsuariosCadastrados);
-  procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario;const aBloquear: boolean);
+  procedure AlterarBloqueio(var aUsuario: TUsuario);
+  procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
+  function BuscarUsuarioCodigo(var aIndice, aCod:integer; var usuario:Tusuario; aUsuario: TUsuariosCadastrados):boolean;
 
 implementation
 
@@ -175,9 +177,9 @@ begin
   end;
 end;
 
-procedure BloquearOuDesbloquearUsuario(aUsuario: TUsuario; const aBloquear: boolean);
+procedure AlterarBloqueio(var aUsuario: TUsuario);
 begin
-  aUsuario.Bloqueado := aBloquear;
+  aUsuario.Bloqueado := not aUsuario.Bloqueado;
 end;
 { Procedure para que o usuário do sistema cadastre um novo usuário da biblioteca }
 procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
@@ -198,4 +200,21 @@ begin
     xCPF, xTelefone, Length(aCadastrados));
 end;
 
-end.
+function BuscarUsuarioCodigo(var aIndice, aCod:integer; var usuario:Tusuario; aUsuario: TUsuariosCadastrados):boolean;
+var
+  i:integer;
+begin
+  for I := 0 to pred(Length(ausuario)) do
+  begin
+    if aCod = ausuario[I].cod then
+    begin
+      Result  := true;
+      usuario  := ausuario[I];
+      aIndice := I;
+      exit;
+
+    end;
+  Result := false;
+  end;
+end;
+END.

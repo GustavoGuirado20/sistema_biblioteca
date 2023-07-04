@@ -103,12 +103,11 @@ var
 begin
   Writeln('1 - Dados Usuário');
   Writeln('2 - Bloquar Usuário');
-  Writeln('3 - Desbloquear Usuário');
-  Writeln('4 - Livors Emprestados');
-  Writeln('5 - Renovar Prazo Livro');
-  Writeln('6 - Devolver Livro');
-  Writeln('7 - Consultar Multas');
-  Writeln('8 - Pagar Multas');
+  Writeln('3 - Livors Emprestados');
+  Writeln('4 - Renovar Prazo Livro');
+  Writeln('5 - Devolver Livro');
+  Writeln('6 - Consultar Multas');
+  Writeln('7 - Pagar Multas');
   Writeln('0 Sair');
 
   readln(opc);
@@ -123,16 +122,20 @@ var
   xLivroEmprestado:TLivroEmprestado;
   xusuarioscadastrados:TUsuariosCadastrados;
   xusuarios:Tusuario;
+  xhistorico:Thistorico;
   nome:string;
   resultado:boolean;
-  falso,i,respostas:integer;
+  falso,i,respostas,indice:integer;
 begin
-
-  while (MenuPrincipal <> 0) do
+  xbiblioteca := bibliotecainicial;
+  xusuarioscadastrados := UsuariosCadastradosIniciais;
+  opc := menuprincipal;
+  while (opc <> 0) do
   begin
-    case MenuPrincipal of
+    case opc of
     1:
      begin
+     opc := menulivro;
       while (MenuLivro <> 0) do
         case MenuLivro of
         1:incluirnovolivro(xBiblioteca);
@@ -141,7 +144,7 @@ begin
             repeat
             Writeln('Escreva o nome do livro desejado');
             readln(nome);
-            BuscarLivroPorNome(xLivro, nome,xBiblioteca);
+            resultado := BuscarLivroPorNome(xLivro, nome,xBiblioteca);
             if (resultado = false) then
             writeln('Não existe um livro catalogado com o nome informado');
             until resultado = true;
@@ -170,33 +173,44 @@ begin
         end;
       end;
      2:begin
-        while (MenuCliente1 <> 0) do
-          case (MenuCliente1) of
-        //  1:
+        opc := menucliente1;
+        while (opc <> 0) do
+          case (opc) of
+          1:IncluirNovoUsuario(xusuarioscadastrados);
 
           2:MostrarUsuariosCastrados(xUsuarioscadastrados);
 
           3:begin
              Writeln('Digite o Código de um Cliente');
              readln(respostas);
-             while(MenuCliente2 <> 0) do
-              case (MenuCliente2) of
+              repeat
+               repeat
+                 BuscarUsuarioCodigo(indice,respostas,xusuarios,xusuarioscadastrados);
+               until (BuscarUsuarioCodigo(indice,respostas,xusuarios,xusuarioscadastrados) = true);
+              MostrarUsuario(xusuarios);
+              Writeln('Você deseja confirmar esse usuários? 1 - Sim 2 - Não');
+              readln(falso);
+              until (falso = 1);
+                  xhistorico:= xusuarios.Historico;
 
-              1:begin
-                for I := 0 to pred(length(xBiblioteca)) do
-                  if xusuarioscadastrados[i].Cod = respostas then
-                  xusuarios := xusuarioscadastrados[i];
-                  break;
-                MostrarUsuario(xusuarios);
 
+             while(menucliente2 <> 0) do
+              case (menucliente2) of
 
-              end;
-              end;
+              1:MostrarUsuario(xusuarios);
 
-            end;
+              2:alterarBloqueio(xusuarios);
+
+              3:EmprestarLivro(xhistorico,xbiblioteca);
+
+              4:RenovarPrazo(xusuarios.LivrosEmprestados.DataEmprestimo,7);
           end;
+        end;
     end;
   end;
+
  end;
 end;
+end;
 END.
+
