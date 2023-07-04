@@ -31,8 +31,10 @@ type
   procedure BloquearOuDesbloquearUsuario(var aUsuario: TUsuario);
   procedure IncluirNovoUsuario(aCadastrados: TUsuariosCadastrados);
   procedure EscreverResultadoPorNomeUsuario(const aUsuarios: TUsuariosCadastrados);
-  procedure ConfirmarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
+  procedure ConfirmarBloqueioDesbloqueio(var aUsuario: TUsuario);
   function IdentificarUsuarioPorCod(aUsuarios: TUsuariosCadastrados): Integer;
+  procedure EfetuarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
+  procedure TelaPagarMulta(var aUsuario: TUsuario);
 
 implementation
 
@@ -274,16 +276,50 @@ begin
   Result := xIndice;
 end;
 
-procedure ConfirmarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
+procedure ConfirmarBloqueioDesbloqueio(var aUsuario: TUsuario);
 var
-  xId: Integer;
   xConfirmar: char;
 begin
-  xId := IdentificarUsuarioPorCod(aUsuarios);
-  write('O usuário ' + aUsuarios[xId].nome + ' está '
-    + MostrarBloqueio(aUsuarios[xId].Bloqueado) + ' (S/N)');
+  write('O usuário ' + aUsuario.nome + ' está '
+    + MostrarBloqueio(aUsuario.Bloqueado) + ' (S/N)');
   readln(xConfirmar);
   if UpCase(xConfirmar)  = 'S' then
-    BloquearOuDesbloquearUsuario(aUsuarios[xId]);
+    BloquearOuDesbloquearUsuario(aUsuario);
+end;
+
+procedure EfetuarBloqueioDesbloqueio(var aUsuarios: TUsuariosCadastrados);
+var
+  xId: Integer;
+begin
+  xId := IdentificarUsuarioPorCod(aUsuarios);
+  ConfirmarBloqueioDesbloqueio(aUsuarios[xId]);
+end;
+
+procedure TelaPagarMulta(var aUsuario: TUsuario);
+var
+  xConfirma: char;
+begin
+  writeln('Total de multa de livros devolvidos ou com prazo renovado: ' +
+    formatarMulta(CalcularMultasFechadas(aUsuario.LivrosEmprestados) +
+    CalcularMultasFechadas(aUsuario.Historico)));
+  writeln('Efetuar pagamento do débito de ' + aUsuario.nome + '? (S/N)');
+  readln(xConfirma);
+  if UpCase(xConfirma) = 'S' then
+  begin
+    ZerarMultas(aUsuario.Historico, aUsuario.LivrosEmprestados);
+    writeln('As multas de ' + aUsuario.nome + ' foram pagas.');
+
+    if CalcularMultasAbertas(aUsuario.LivrosEmprestados) > 0 then
+    begin
+      writeln('Aviso: Ainda existem débitos de livros não devolvidos ou ' +
+      'renovados. Valor atual: ' +
+      formatarMulta(calcularMultasAbertas(aUsuario.LivrosEmprestados)));
+    end;
+
+    if aUsuario.Bloqueado = true then
+      ConfirmarBloqueioDesbloqueio(aUsuario);
+  end;
+
+
 end;
 end.

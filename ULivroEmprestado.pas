@@ -17,7 +17,7 @@ type
   function FormatarMulta(aMulta: double): String;
   function PreencherLivroEmprestado(const aLivro: TLivro; const aDataEmprestimo,
                                     aDataDevolucao: TDate): TLivroEmprestado;
-  procedure RenovarPrazo(const aBloqueado: boolean; var aEmprestado: TLivroEmprestado);
+  procedure RenovarPrazo(var aEmprestado: TLivroEmprestado);
   function FormatarData(aData: TDate): String;
   function EscolherLivroEmprestado(aLivrosEmprestados: THistorico): Byte;
   function CalcularMultasAbertas(aHistorico: THistorico): double;
@@ -35,6 +35,8 @@ type
   procedure RegistrarDevolucaoLivro(var aHistorico: THistorico;
     aLivroEmprestado: TLivroEmprestado);
   function PodeRenovar(const aBloqueado: boolean; const aDataEmprestimo, aDataDevolucao: TDate): boolean;
+  procedure TelaRenovarPrazo(const aBloqueado: Boolean; var aLivrosEmprestados: THistorico);
+  procedure ZerarMultas(var aHistorico, aEmprestados: THistorico);
 
 
 implementation
@@ -119,12 +121,12 @@ begin
   Result := IncDay(aDataInicial, aDiasAumentados);
 end;
 
-procedure RenovarPrazo(const aBloqueado: boolean; var aEmprestado: TLivroEmprestado);
+procedure RenovarPrazo(var aEmprestado: TLivroEmprestado);
 const
   DIAS_RENOVACAO = 7;
 begin
-  if PodeRenovar(aBloqueado, aEmprestado.DataEmprestimo, aEmprestado.DataDevolucao) then
-    aEmprestado.DataDevolucao := EsticarPrazo(aEmprestado.DataDevolucao, DIAS_RENOVACAO);
+  aEmprestado.Multa := CalcularMulta(aEmprestado.DataDevolucao);
+  aEmprestado.DataDevolucao := EsticarPrazo(aEmprestado.DataDevolucao, DIAS_RENOVACAO);
 end;
 
 {Procedure para limpar todas as informações de livro emprestado de um usuário,
@@ -331,11 +333,31 @@ begin
     ' devolvido com sucesso');
 end;
 
-procedure TelaRenovarPrazo(aLivrosEmprestados: THistorico);
+procedure TelaRenovarPrazo(const aBloqueado: Boolean; var aLivrosEmprestados: THistorico);
 var
-  xOpc: byte;
+  xId: byte;
 begin
-  xOpc := EscolherLivroEmprestado(aLivrosEmprestados);
+  xId := EscolherLivroEmprestado(aLivrosEmprestados);
+  if PodeRenovar(aBloqueado, aLivrosEmprestados[xId].DataEmprestimo, aLivrosEmprestados[xId].DataDevolucao) then
+  begin
+    RenovarPrazo(aLivrosEmprestados[xId]);
+    writeln('Renovação efetuada');
+    MostrarLivroEmprestado(aLivrosEmprestados[xId]);
+  end
+  Else
+    writeln('O livro não pode ser renovado');
 end;
+
+procedure ZerarMultas(var aHistorico, aEmprestados: THistorico);
+var
+  I: Integer;
+begin
+  for I := 0 to pred(Length(aHistorico)) do
+    PagarMulta(aHistorico[I]);
+
+  for I := 0 to pred(Length(aEmprestados)) do
+    PagarMulta(aEmprestados[I]);
+end;
+
 
 end.

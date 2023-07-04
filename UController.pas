@@ -3,12 +3,13 @@ unit UController;
 
 interface
 
-
+  procedure ControllerPrincipal;
 
 implementation
 
 uses
   UUsuario, ULivroEmprestado, ULivro, UOperacoes, SysUtils;
+
 
 {procedure ControllerUsuario(var aBiblioteca: TBiblioteca; var aUsuario: TUsuario);
 begin
@@ -105,7 +106,6 @@ begin
   Writeln('3 - Renovar um Empréstimo');
   Writeln('4 - Consultar e Pagar Multas');
   Writeln('5 - Bloquear ou Desbloquear Usuário');
-  Writeln('6 - Empréstimos, devoluções e multas');
   Writeln('0 - Sair');
 
   readln(opc);
@@ -127,6 +127,7 @@ begin
       2: DevolverLivro(aUsuario[xId].LivrosEmprestados, aUsuario[xId].Historico,
         aBiblioteca);
       3: TelaRenovarPrazo(aUsuario[xId].Bloqueado, aUsuario[xId].LivrosEmprestados);
+      4: TelaPagarMulta(aUsuario[xId]);
     end;
   end;
 end;
@@ -143,7 +144,7 @@ begin
       1: IncluirNovoUsuario(aUsuarios);
       2: EscreverResultadoPorNomeUsuario(aUsuarios);
       3: MostrarUsuariosCastrados(aUsuarios);
-      4: ConfirmarBloqueioDesbloqueio(aUsuarios);
+      4: EfetuarBloqueioDesbloqueio(aUsuarios);
       5: ControllerOutros(aBiblioteca, aUsuarios);
     end;
   end;
@@ -178,13 +179,11 @@ begin
   while (xOpc <> 0) do
   begin
     case xOpc of
-    1: ControllerLivro(xBiblioteca);
-
+      1: ControllerLivro(xBiblioteca);
+      2: ControllerCliente(xBiblioteca, xUsuarios);
     end;
     xOpc := MenuPrincipal;
   end;
 end;
-
-
 
 end.
